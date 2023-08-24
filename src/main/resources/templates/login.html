@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/img/icon.png">
+    <title>车辆管理平台</title>
+    <meta charset="UTF-8">
+    <!--<link href="/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="/css/style.min.css" rel="stylesheet">
+    <link href="/css/login.css" rel="stylesheet">
+    <link href="/css/xcConfirm.css" rel="stylesheet">
+    <script type="text/javascript" src="/js/login.js"></script>
+    <script type="text/javascript" src="/js/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="/js/xcConfirm.js"></script>
+
+</head>
+<body>
+        <div class="login">
+            <form id = "login" onsubmit="return false">
+                <h3 class="form welcome">欢迎使用车辆管理平台</h3>
+                <input type="tel" placeholder="请输入手机号码" class="form-control uname tel" name="mobile" oninput="if(value.length>5)value=value.slice(0,11)" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength=11>
+                <span id="tel_msg" style="display:none;color:#ff0000;">请输入正确的手机号</span>
+                <input type="password" autocomplete="new-password" placeholder="请输入密码" class="form-control pword pwd" name="password">
+                <span id="pswd_msg" style="display:none;color:#ff0000;">请输入正确的密码</span>
+                <input class="btn btn-success btn-block loginbtn" type="button" value="登录" onclick="login()">
+            </form>
+            <input class="btn btn-success btn-block register" type="button" value="注册" onclick="register()">
+            <input class="btn btn-success btn-block forget" type="button" value="忘记密码" onclick="forget()">
+        </div>
+</body>
+</html>

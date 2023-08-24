@@ -1,0 +1,18 @@
+html {
+    /*1. html默认跟浏览器高度不一样大 */
+    height: 100%;
+}
+
+body {
+    font-family: Microsoft Yahei;
+    height: 100%;
+    background-color: #ecf0f4;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
+.layui-tab-title .layui-this {
+    color: #009688;
+}

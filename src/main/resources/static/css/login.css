@@ -1,0 +1,51 @@
+html {
+    /*1. html默认跟浏览器高度不一样大 */
+    height: 100%;
+}
+
+body {
+    font-family: Microsoft Yahei;
+    height: 100%;
+    background-image: url("/img/background.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
+.login{
+    width: 360px;
+    height: 280px;
+    position: absolute;
+    top: calc(35% - 25px); /*垂直居中 */
+    left:calc(40% - 50px); /*水平居中 */
+    border: 1px solid rgba(255,255,255,.3);
+    background: rgba(255,255,255,.2);
+    padding: 30px;
+}
+.welcome{
+    text-align: center;
+}
+.tel{
+    width: 96%;
+}
+.pwd{
+    width: 96%;
+    margin-top: 20px;
+}
+.loginbtn{
+    width: 100%;
+    height: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.register {
+    width: 45%;
+    height: 40px;
+    float: left;
+}
+.forget{
+    width: 45%;
+    height: 40px;
+    float: right;
+}
