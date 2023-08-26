@@ -21,7 +21,7 @@ public interface Constants {
     /**
      * 默认头像
      */
-    String DEFAULT_HEAD = "/static/img/head.png";
+    String DEFAULT_HEAD = "/img/head.png";
 
     /**
      * 手机号验证码储存key

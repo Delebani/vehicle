@@ -33,4 +33,10 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRolePo> {
         queryWrapper.eq(UserRolePo::getUserId, userId);
         return super.list(queryWrapper);
     }
+
+    public List<UserRolePo> findByUserIdIn(List<Long> userIdList) {
+        LambdaQueryWrapper<UserRolePo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.in(UserRolePo::getUserId, userIdList);
+        return super.list(queryWrapper);
+    }
 }

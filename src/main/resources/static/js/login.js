@@ -28,6 +28,9 @@ function login() {
             //console.log(result)
             if(0 == result.code){
                 localStorage.setItem('token', result.data.token);
+                localStorage.setItem('headUrl', result.data.headUrl);
+                localStorage.setItem('username', result.data.name);
+                sessionStorage.setItem('sessionId', result.data.token)
                 window.location.href = '/index';
             }else{
                 window.wxc.xcConfirm(result.message, window.wxc.xcConfirm.typeEnum.error);

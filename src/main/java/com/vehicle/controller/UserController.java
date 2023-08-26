@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vehicle.base.web.Response;
 import com.vehicle.dto.req.UserPageReq;
 import com.vehicle.dto.req.UserReq;
+import com.vehicle.dto.req.UserRoleReq;
 import com.vehicle.dto.vo.MenuTreeVo;
 import com.vehicle.dto.vo.UserVo;
 import com.vehicle.service.UserService;
@@ -53,6 +54,13 @@ public class UserController {
     @PostMapping(value = "/page")
     public Response<Page<UserVo>> page(@RequestBody UserPageReq req) {
         return Response.success(userService.page(req));
+    }
+
+    @ApiOperation(value = "用户角色保存", notes = "用户角色保存")
+    @PostMapping(value = "/save_role")
+    public Response saveRole(@Validated @RequestBody UserRoleReq req) {
+        userService.saveRole(req);
+        return Response.success();
     }
 
     @ApiOperation(value = "用户菜单树", notes = "用户菜单树")

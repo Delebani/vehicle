@@ -7,6 +7,8 @@ import com.vehicle.po.RolePo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * @author lijianbing
  * @date 2023/8/1 15:58
@@ -21,4 +23,6 @@ public interface RoleTransform {
     RoleVo po2Vo(RolePo po);
 
     Page<RoleVo> poPage2VoPage(Page<RolePo> poPage);
+
+    List<RoleVo> poList2VoList(List<RolePo> poList);
 }

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author lijianbing
  * @date 2023/7/31 15:14
@@ -50,5 +52,10 @@ public class RoleController {
     @PostMapping(value = "/page")
     public Response<Page<RoleVo>> page(@RequestBody RolePageReq req) {
         return Response.success(roleService.page(req));
+    }
+    @ApiOperation(value = "所有角色", notes = "所有角色")
+    @GetMapping(value = "/find_all")
+    public Response<List<RoleVo>> findAll() {
+        return Response.success(roleService.findAll());
     }
 }

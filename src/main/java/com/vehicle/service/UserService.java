@@ -1,6 +1,5 @@
 package com.vehicle.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -12,10 +11,10 @@ import com.vehicle.base.cas.CurrentUser;
 import com.vehicle.base.cas.UserHolder;
 import com.vehicle.base.constants.Constants;
 import com.vehicle.base.constants.SexEnum;
-import com.vehicle.base.constants.StateEnum;
 import com.vehicle.base.exception.BizException;
 import com.vehicle.dto.req.UserPageReq;
 import com.vehicle.dto.req.UserReq;
+import com.vehicle.dto.req.UserRoleReq;
 import com.vehicle.dto.vo.MenuTreeVo;
 import com.vehicle.dto.vo.UserVo;
 import com.vehicle.mapper.UserMapper;
@@ -31,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -67,6 +67,14 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
         if (StringUtils.isBlank(userPo.getPassword())) {
             userPo.setPassword(Constants.DEFAULT_PASSWORD);
         }
+        UserPo mobileUserPo = getByMobile(req.getMobile());
+        if (null == req.getId() && null != mobileUserPo) {
+            throw BizException.error("该用户手机号已被使用，请确认");
+        }
+        if (null != req.getId() && null != mobileUserPo && req.getId() != mobileUserPo.getId()) {
+            throw BizException.error("用户手机号已被使用，请确认");
+        }
+
         super.saveOrUpdate(userPo);
     }
 
@@ -84,7 +92,19 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
         queryWrapper.like(StringUtils.isNotBlank(req.getName()), UserPo::getName, req.getName());
         queryWrapper.like(ObjectUtils.isNotNull(req.getType()), UserPo::getType, req.getType());
         Page<UserPo> poPage = super.page(new Page<>(req.getCurrent(), req.getPageSize()), queryWrapper);
-        return UserTransform.INSTANCE.poPage2VoPage(poPage);
+        Page<UserVo> voPage = UserTransform.INSTANCE.poPage2VoPage(poPage);
+        List<Long> userIdList = voPage.getRecords().stream().map(UserVo::getId).collect(Collectors.toList());
+
+        if (CollectionUtils.isNotEmpty(userIdList)) {
+            List<UserRolePo> userRolePoList = userRoleService.findByUserIdIn(userIdList);
+            Map<Long, List<Long>> map = userRolePoList.stream().collect(Collectors.groupingBy(UserRolePo::getUserId, Collectors.mapping(UserRolePo::getRoleId, Collectors.toList())));
+            voPage.getRecords().forEach(o -> {
+                if (CollectionUtils.isNotEmpty(map.get(o.getId()))) {
+                    o.setRoleIdList(map.get(o.getId()));
+                }
+            });
+        }
+        return voPage;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -109,10 +129,11 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
         LambdaQueryWrapper<UserPo> queryWrapper = Wrappers.lambdaQuery(UserPo.class).eq(UserPo::getMobile, mobile);
         return super.getOne(queryWrapper);
     }
-    public void updateToken(UserPo po){
+
+    public void updateToken(UserPo po) {
         LambdaUpdateWrapper<UserPo> updateWrapper = Wrappers.lambdaUpdate();
         updateWrapper.set(UserPo::getToken, po.getToken());
-        updateWrapper.eq(UserPo::getId,po.getId());
+        updateWrapper.eq(UserPo::getId, po.getId());
         super.update(updateWrapper);
     }
 
@@ -130,5 +151,19 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
             }
         }
         return menuVoList;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void saveRole(UserRoleReq req) {
+        Long userId = req.getId();
+        List<UserRolePo> delPoList = userRoleService.selectByUserId(userId);
+        userRoleService.removeByIds(delPoList);
+        List<UserRolePo> savePoList = req.getRoleIdList().stream().map(o -> {
+            UserRolePo userRolePo = new UserRolePo();
+            userRolePo.setUserId(userId);
+            userRolePo.setRoleId(o);
+            return userRolePo;
+        }).collect(Collectors.toList());
+        userRoleService.saveBatch(savePoList);
     }
 }

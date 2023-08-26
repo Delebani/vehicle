@@ -1,5 +1,6 @@
 package com.vehicle.dto.vo;
 
+import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 用户表
@@ -71,4 +73,6 @@ public class UserVo implements Serializable {
     private String updater;
 
     private LocalDateTime updateTime;
+
+    private List<Long> roleIdList = Lists.newArrayList();;
 }

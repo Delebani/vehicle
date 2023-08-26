@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author lijianbing
  * @date 2023/7/31 14:38
@@ -62,5 +64,10 @@ public class RoleService extends ServiceImpl<RoleMapper, RolePo> {
         queryWrapper.like(StringUtils.isNotBlank(req.getRoleName()), RolePo::getRoleName, req.getRoleName());
         Page<RolePo> poPage = super.page(new Page<>(req.getCurrent(), req.getPageSize()), queryWrapper);
         return RoleTransform.INSTANCE.poPage2VoPage(poPage);
+    }
+
+    public List<RoleVo> findAll() {
+        List<RolePo> poList = super.list();
+        return RoleTransform.INSTANCE.poList2VoList(poList);
     }
 }

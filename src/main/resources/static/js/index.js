@@ -19,6 +19,10 @@ $(function(){
         console.log(address)
         $("iframe").attr("src",address);
     });
+    var headUrl = localStorage.getItem('headUrl');
+    $("#head_img").attr('src', headUrl);
+    var username = localStorage.getItem('username');
+    $("#username").text(username);
 
     layui.use(['element', 'layer', 'util'], function(){
         element = layui.element

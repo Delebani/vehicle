@@ -18,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -54,8 +56,9 @@ public class LoginController {
     @ApiOperation(value = "pc端登录", notes = "pc端登录")
     @PostMapping(value = "/pc_login")
     @ResponseBody
-    public Response<UserVo> pcLogin(@Validated @RequestBody PcLoginReq req) {
-        return Response.success(loginService.pcLogin(req));
+    public Response<UserVo> pcLogin(@Validated @RequestBody PcLoginReq req, HttpServletRequest request, HttpServletResponse response) {
+        UserVo userVo = loginService.pcLogin(req);
+        return Response.success(userVo);
     }
 
     @ApiOperation(value = "pc端重置密码", notes = "pc端重置密码")
