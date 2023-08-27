@@ -1,7 +1,9 @@
 package com.vehicle.transform;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vehicle.dto.req.MenuReq;
 import com.vehicle.dto.vo.MenuTreeVo;
+import com.vehicle.dto.vo.MenuVo;
 import com.vehicle.po.MenuPo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -20,4 +22,8 @@ public interface MenuTransform {
     MenuPo req2Po(MenuReq req);
 
     List<MenuTreeVo> poList2TreeVoList(List<MenuPo> poList);
+
+    Page<MenuVo> poPage2VoPage(Page<MenuPo> poPage);
+
+    List<MenuVo> poList2VoList(List<MenuPo> poList);
 }

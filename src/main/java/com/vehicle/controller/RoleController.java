@@ -2,6 +2,7 @@ package com.vehicle.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vehicle.base.web.Response;
+import com.vehicle.dto.req.RoleMenuReq;
 import com.vehicle.dto.req.RolePageReq;
 import com.vehicle.dto.req.RoleReq;
 import com.vehicle.dto.vo.RoleVo;
@@ -53,9 +54,17 @@ public class RoleController {
     public Response<Page<RoleVo>> page(@RequestBody RolePageReq req) {
         return Response.success(roleService.page(req));
     }
+
     @ApiOperation(value = "所有角色", notes = "所有角色")
     @GetMapping(value = "/find_all")
     public Response<List<RoleVo>> findAll() {
         return Response.success(roleService.findAll());
+    }
+
+    @ApiOperation(value = "角色保存菜单权限", notes = "角色保存菜单权限")
+    @PostMapping(value = "/save_menu")
+    public Response saveMenu(@Validated @RequestBody RoleMenuReq req) {
+        roleService.saveMenu(req);
+        return Response.success();
     }
 }

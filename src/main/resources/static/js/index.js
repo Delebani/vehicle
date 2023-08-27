@@ -59,7 +59,7 @@ $(function(){
                 var htmlStr = '';
                 $.each(data, function(i, n) {
                     htmlStr += '<li class="layui-nav-item layui-nav-itemed">';
-                    htmlStr += '<a class="" href="javascript:;" data-src="'+n.menuUrl+'">' + n.menuName + '</a>';
+                    htmlStr += '<a onclick="openTab(\''+n.menuName+'\',\''+n.menuUrl+'\',\''+n.id+'\')" href="javascript:;" data-src="'+n.menuUrl+'">' + n.menuName + '</a>';
                     if (n.children.length > 0) {
                         var children = n.children;
                         htmlStr += '<dl class="layui-nav-child">';
@@ -98,6 +98,9 @@ $(function(){
 
 });
 function openTab(title,url,id){
+    if(null == url || '' == url){
+        return
+    }
     var frameheight = $(window).height();
 //	获取相同id组件的长度
     var $node = $("li[lay-id='"+id+"']");
@@ -114,4 +117,19 @@ function openTab(title,url,id){
     element.tabChange('openTab', id);
 
 
+}
+
+function logout() {
+    layer.confirm('确认退出吗', function(index){
+        // 向服务端发送删除指令
+        $.get('/logout',function (res) {
+            console.log(res);
+            if(0 == res.code) {
+                layer.close(index);
+                localStorage.clear();
+                sessionStorage.clear()
+                window.location.href = '/login';
+            }
+        })
+    });
 }

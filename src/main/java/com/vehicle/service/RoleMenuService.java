@@ -10,6 +10,7 @@ import com.vehicle.po.RoleMenuPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class RoleMenuService extends ServiceImpl<RoleMenuMapper, RoleMenuPo> {
         super.remove(Wrappers.lambdaQuery(RoleMenuPo.class).eq(RoleMenuPo::getMenuId, menuId));
     }
 
-    public List<RoleMenuPo> findByRoleIdin(List<Long> roleIdList) {
+    public List<RoleMenuPo> findByRoleIdin(Collection<Long> roleIdList) {
         if (CollectionUtils.isEmpty(roleIdList)) {
             return Lists.newArrayList();
         }

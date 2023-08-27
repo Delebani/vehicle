@@ -1,8 +1,11 @@
 package com.vehicle.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vehicle.base.web.Response;
+import com.vehicle.dto.req.MenuPageReq;
 import com.vehicle.dto.req.MenuReq;
 import com.vehicle.dto.vo.MenuTreeVo;
+import com.vehicle.dto.vo.MenuVo;
 import com.vehicle.service.MenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,15 +43,21 @@ public class MenuController {
         return Response.success();
     }
 
+    @ApiOperation(value = "分页", notes = "分页")
+    @PostMapping(value = "/page")
+    public Response<Page<MenuVo>> page(@Validated @RequestBody MenuPageReq req) {
+        return Response.success(menuService.page(req));
+    }
+
     @ApiOperation(value = "菜单树", notes = "菜单树")
     @GetMapping(value = "/tree")
     public Response<List<MenuTreeVo>> tree() {
         return Response.success(menuService.tree());
     }
 
-    @RequestMapping(value = "/fetch/{id}", method = RequestMethod.GET)
-    String getDynamicUriValue(@PathVariable String id) {
-        System.out.println("ID is " + id);
-        return "Dynamic URI parameter fetched";
+    @ApiOperation(value = "父级菜单", notes = "父级菜单")
+    @GetMapping(value = "/parent")
+    public Response<List<MenuVo>> parent() {
+        return Response.success(menuService.parent());
     }
 }

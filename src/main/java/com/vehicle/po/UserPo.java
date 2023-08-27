@@ -26,17 +26,11 @@ public class UserPo implements Serializable {
 
     private Integer type;
 
-    private Integer sex;
-
-    private Integer age;
-
     private String mobile;
 
     private String headUrl;
 
     private String idNo;
-
-    private String department;
 
     private String duty;
 

@@ -34,12 +34,6 @@ public class UserVo implements Serializable {
     @ApiModelProperty("用户类型：1-管理员；2-用车人员；3-司机；4-普通用户；10-其他")
     private String type;
 
-    @ApiModelProperty("姓别")
-    private String sex;
-
-    @ApiModelProperty("年龄")
-    private Integer age;
-
     @ApiModelProperty("手机号")
     private String mobile;
 
@@ -48,9 +42,6 @@ public class UserVo implements Serializable {
 
     @ApiModelProperty("身份证号码")
     private String idNo;
-
-    @ApiModelProperty("部门")
-    private String department;
 
     @ApiModelProperty("职务")
     private String duty;

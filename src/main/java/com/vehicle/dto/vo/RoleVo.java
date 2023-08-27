@@ -1,5 +1,6 @@
 package com.vehicle.dto.vo;
 
+import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author lijianbing
@@ -31,4 +33,6 @@ public class RoleVo implements Serializable {
     private String updater;
 
     private LocalDateTime updateTime;
+
+    private List<Long> menuIdList = Lists.newArrayList();
 }

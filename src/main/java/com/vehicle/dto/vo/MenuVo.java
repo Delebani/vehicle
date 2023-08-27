@@ -6,29 +6,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author lijianbing
- * @date 2023/7/31 13:49
+ * @date 2023/8/27 23:40
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "MenuTreeVo 对象", description = "MenuTreeVo 响应对象")
-public class MenuTreeVo implements Serializable {
+@ApiModel(value = "MenuVo 对象", description = "MenuVo 响应对象")
+public class MenuVo implements Serializable {
 
-    private static final long serialVersionUID = 3815014119292812807L;
+    private static final long serialVersionUID = -1675903957987408852L;
 
     private Long id;
 
     private Long parentId;
+
+    private String parentName;
 
     private String menuName;
 
     private String menuUrl;
 
     private Integer menuSort;
-
-    private List<MenuTreeVo> children;
 }

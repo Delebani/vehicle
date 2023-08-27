@@ -12,17 +12,24 @@ function redirectHandle(xhr) {
 
     var res = JSON.parse(xhr.responseText);
     console.log(res);
+    handleRes(res);
+}
+
+function handleRes(res){
     if(999 == res.code){
-        var win = window;
-        while(win != win.top){
-            win = win.top;
-        }
-        win.location.href = '/login';
+        layer.confirm('登录超时，请重新登录', function(index){
+            var win = window;
+            while(win != win.top){
+                win = win.top;
+            }
+            win.location.href = '/login';
+        })
     }else if(res.code > 0){
         console.log(res.message);
         layer.msg(res.message);
     }
 }
+
 $(function () {
     $(document).ajaxComplete(function (event, xhr, settings) {
         console.log("ajaxComplete 执行")

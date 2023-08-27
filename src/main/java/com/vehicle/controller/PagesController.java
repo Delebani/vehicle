@@ -53,4 +53,10 @@ public class PagesController {
         return "/pages/menu";
     }
 
+    @GetMapping("/mine")
+    public String mine() throws Exception {
+
+        return "/pages/mine";
+    }
+
 }

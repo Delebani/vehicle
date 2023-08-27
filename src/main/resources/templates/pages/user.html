@@ -68,7 +68,7 @@
 </script>
     <table id="user" lay-filter="user" ></table>
 
-<!--添加用户-->
+<!--添加编辑用户-->
 <form class="layui-form" lay-filter="user-from" style="padding-top:20px" id ="user-from" hidden="true"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
     <input type="text" name="id" class="layui-hide">
     <div class="layui-form-item">
@@ -78,24 +78,6 @@
                 <input type="text" name="name" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">性别:</label>
-            <div class="layui-input-block">
-                <select name="sex">
-                    <option value="1">男</option>
-                    <option value="2">女</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">年龄:</label>
-            <div class="layui-input-block">
-                <input type="text" name="age" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input" maxlength="2">
-            </div>
-        </div>
-
-    </div>
-    <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">用户类型:</label>
             <div class="layui-input-block">
@@ -108,6 +90,25 @@
                 </select>
             </div>
         </div>
+        <!--<div class="layui-inline">-->
+            <!--<label class="layui-form-label">性别:</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<select name="sex">-->
+                    <!--<option value="1">男</option>-->
+                    <!--<option value="2">女</option>-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-inline">-->
+            <!--<label class="layui-form-label">年龄:</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" name="age" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input" maxlength="2">-->
+            <!--</div>-->
+        <!--</div>-->
+
+    </div>
+    <div class="layui-form-item">
+
         <div class="layui-inline">
             <label class="layui-form-label">手机号码:</label>
             <div class="layui-input-block">
@@ -122,12 +123,12 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">部门:</label>
-            <div class="layui-input-block">
-                <input type="text" name="department" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-        </div>
+        <!--<div class="layui-inline">-->
+            <!--<label class="layui-form-label">部门:</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" name="department" placeholder="请输入" autocomplete="off" class="layui-input">-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="layui-inline">
             <label class="layui-form-label">职务:</label>
             <div class="layui-input-block">
@@ -148,7 +149,7 @@
                 <i class="layui-icon">&#xe67c;</i>上传图片
             </button>
             <div class="layui-hide" id="head_route">
-                <!--<hr>-->
+                <hr>
                 <img src="" alt="图片未找到" style="max-width: 196px">
             </div>
             <input type="hidden" id="headUrl" name="headUrl" value="">
@@ -157,6 +158,91 @@
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button id="savebtn" class="layui-btn" lay-submit lay-filter="save-btn">保存</button>
+        </div>
+    </div>
+</form>
+
+<!--查看用户-->
+<form class="layui-form" lay-filter="userview" style="padding-top:20px" id ="userview" hidden="true"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <input type="text" name="id" class="layui-hide">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label required">姓名:</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">用户类型:</label>
+            <div class="layui-input-block">
+                <select name="type" required lay-verify="required" lay-filter="userType" disabled>
+                    <option value="1">管理员</option>
+                    <option value="2">用车人员</option>
+                    <option value="3">司机</option>
+                    <option value="4">普通用户</option>
+                    <option value="10">其他</option>
+                </select>
+            </div>
+        </div>
+        <!--<div class="layui-inline">-->
+        <!--<label class="layui-form-label">性别:</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<select name="sex">-->
+        <!--<option value="1">男</option>-->
+        <!--<option value="2">女</option>-->
+        <!--</select>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-inline">-->
+        <!--<label class="layui-form-label">年龄:</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<input type="text" name="age" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input" maxlength="2">-->
+        <!--</div>-->
+        <!--</div>-->
+
+    </div>
+    <div class="layui-form-item">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">手机号码:</label>
+            <div class="layui-input-block">
+                <input type="text" name="mobile" required lay-verify="required|phone" placeholder="" autocomplete="off" class="layui-input" oninput="if(value.length>5)value=value.slice(0,11)" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="11" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">身份证号码:</label>
+            <div class="layui-input-block">
+                <input type="text" name="idNo" required lay-verify="required|identity" placeholder="" autocomplete="off" class="layui-input" maxlength="18" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <!--<div class="layui-inline">-->
+        <!--<label class="layui-form-label">部门:</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<input type="text" name="department" placeholder="请输入" autocomplete="off" class="layui-input">-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="layui-inline">
+            <label class="layui-form-label">职务:</label>
+            <div class="layui-input-block">
+                <input type="text" name="duty" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">岗位:</label>
+            <div class="layui-input-block">
+                <input type="text" name="post" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像:</label>
+        <div class="layui-input-block">
+            <div class="layui-hide" id="head_route_url">
+                <!--<hr>-->
+                <img src="" alt="图片未找到" style="max-width: 196px">
+            </div>
         </div>
     </div>
 </form>

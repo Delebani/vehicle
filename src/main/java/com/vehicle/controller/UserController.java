@@ -30,6 +30,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @ApiOperation(value = "我的信息", notes = "我的信息")
+    @GetMapping(value = "/mine")
+    public Response<UserVo> mine() {
+        return Response.success(userService.mine());
+    }
+
+    @ApiOperation(value = "保存我的信息", notes = "保存我的信息")
+    @PostMapping(value = "/save_mine")
+    public Response<UserVo> saveMine(@Validated @RequestBody UserReq req) {
+        return Response.success(userService.saveMine(req));
+    }
+
     @ApiOperation(value = "新增更新", notes = "新增更新")
     @PostMapping(value = "/save_or_update")
     public Response saveOrUpDate(@Validated @RequestBody UserReq req) {

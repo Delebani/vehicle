@@ -25,7 +25,7 @@ public interface UserTransform {
     UserPo req2Po(UserReq req);
 
     @Mappings({
-            @Mapping(target = "sex", expression = "java(SexEnum.getByCode(po.getSex()).getDesc())"),
+//            @Mapping(target = "sex", expression = "java(SexEnum.getByCode(po.getSex()).getDesc())"),
             @Mapping(target = "type", expression = "java(UserTypeEnum.getByCode(po.getType()).getDesc())"),
     })
     UserVo po2Vo(UserPo po);

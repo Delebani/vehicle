@@ -14,9 +14,87 @@
     <script type="text/javascript" src="/js/xcConfirm.js"></script>
     <script type="text/javascript" src="/layui/layui.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
+    <script type="text/javascript" src="/js/role.js"></script>
 
 </head>
 <body>
-角色
+<!--搜索框-->
+<form class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">角色名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="roleName" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn" lay-submit lay-filter="data-search-btn">搜索</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!---表头操作--->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+    </div>
+</script>
+
+<table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+<script type="text/html" id="currentTableBar">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="menu">菜单权限</a>
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="del">删除</a>
+</script>
+<table id="role" lay-filter="role" ></table>
+
+<!--添加角色-->
+<form class="layui-form" lay-filter="rolefrom" style="padding-top:20px" id ="rolefrom" hidden="true"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <input type="text" name="id" class="layui-hide">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label required">角色名称:</label>
+            <div class="layui-input-block">
+                <input type="text" name="roleName" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="savebtn" class="layui-btn" lay-submit lay-filter="savebtn">保存</button>
+        </div>
+    </div>
+</form>
+
+<!--查看角色-->
+<form class="layui-form" lay-filter="roleview" style="padding-top:20px" id ="roleview" hidden="true"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <input type="text" name="id" class="layui-hide">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label required">角色名称:</label>
+            <div class="layui-input-block">
+                <input type="text" name="roleName" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<!--菜单授权-->
+<form class="layui-form" lay-filter="menufrom" style="padding-top:20px" id ="menufrom" hidden="true">
+    <input type="text" name="id" class="layui-hide">
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单授权</label>
+        <div class="layui-input-block" id="menutree">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="menubtn" class="layui-btn" lay-submit lay-filter="menubtn">保存</button>
+        </div>
+    </div>
+</form>
 </body>
 </html>

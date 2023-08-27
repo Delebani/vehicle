@@ -49,7 +49,6 @@ public class LoginService {
         po.setMobile(req.getMobile());
         po.setIdNo("请填写身份证号码");
         po.setType(UserTypeEnum.ORDINARY.getCode());
-        po.setSex(SexEnum.MAN.getCode());
         po.setHeadUrl(Constants.DEFAULT_HEAD);
         po.setPassword(Constants.DEFAULT_PASSWORD);
         userService.save(po);

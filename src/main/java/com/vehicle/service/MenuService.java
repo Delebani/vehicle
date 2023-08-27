@@ -1,10 +1,16 @@
 package com.vehicle.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.vehicle.base.exception.BizException;
+import com.vehicle.dto.req.MenuPageReq;
 import com.vehicle.dto.req.MenuReq;
 import com.vehicle.dto.vo.MenuTreeVo;
+import com.vehicle.dto.vo.MenuVo;
 import com.vehicle.mapper.MenuMapper;
 import com.vehicle.po.MenuPo;
 import com.vehicle.transform.MenuTransform;
@@ -15,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +54,7 @@ public class MenuService extends ServiceImpl<MenuMapper, MenuPo> {
     }
 
     public List<MenuTreeVo> tree() {
-        List<MenuPo> poList = super.list();
+        List<MenuPo> poList = super.list(Wrappers.lambdaQuery(MenuPo.class).orderByAsc(MenuPo::getParentId).orderByAsc(MenuPo::getMenuSort));
         List<MenuTreeVo> voList = MenuTransform.INSTANCE.poList2TreeVoList(poList);
         List<MenuTreeVo> rootList = voList.stream().filter(e -> 0 == e.getParentId()).sorted(Comparator.comparing(MenuTreeVo::getMenuSort)).collect(Collectors.toList());
         rootList = completeChildrenMenu(rootList, voList);
@@ -74,10 +82,39 @@ public class MenuService extends ServiceImpl<MenuMapper, MenuPo> {
     }
 
     public List<MenuTreeVo> findByIdIn(List<Long> menuIdList) {
-        List<MenuPo> poList = super.listByIds(menuIdList);
+        if (CollectionUtils.isEmpty(menuIdList)) {
+            return Lists.newArrayList();
+        }
+        LambdaQueryWrapper<MenuPo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.in(MenuPo::getId, menuIdList);
+        queryWrapper.orderByAsc(MenuPo::getParentId).orderByAsc(MenuPo::getMenuSort);
+        List<MenuPo> poList = super.list(queryWrapper);
         List<MenuTreeVo> voList = MenuTransform.INSTANCE.poList2TreeVoList(poList);
         List<MenuTreeVo> rootList = voList.stream().filter(e -> 0 == e.getParentId()).sorted(Comparator.comparing(MenuTreeVo::getMenuSort)).collect(Collectors.toList());
         rootList = completeChildrenMenu(rootList, voList);
         return rootList;
+    }
+
+    public Page<MenuVo> page(MenuPageReq req) {
+        LambdaQueryWrapper<MenuPo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.like(StringUtils.isNotBlank(req.getMenuName()), MenuPo::getMenuName, req.getMenuName());
+        queryWrapper.orderByAsc(MenuPo::getParentId).orderByAsc(MenuPo::getMenuSort);
+        Page<MenuPo> poPage = super.page(new Page<>(req.getCurrent(), req.getPageSize()), queryWrapper);
+        Page<MenuVo> voPage = MenuTransform.INSTANCE.poPage2VoPage(poPage);
+        Set<Long> parentIdSet = voPage.getRecords().stream().map(MenuVo::getParentId).collect(Collectors.toSet());
+        List<MenuPo> parentList = super.listByIds(parentIdSet);
+        Map<Long, String> parentMap = parentList.stream().collect(Collectors.toMap(MenuPo::getId, MenuPo::getMenuName));
+        voPage.getRecords().forEach(o -> {
+            o.setParentName(parentMap.get(o.getParentId()));
+        });
+        return voPage;
+    }
+
+    public List<MenuVo> parent() {
+        LambdaQueryWrapper<MenuPo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(MenuPo::getParentId, 0L);
+        queryWrapper.orderByAsc(MenuPo::getParentId).orderByAsc(MenuPo::getMenuSort);
+        List<MenuPo> poList = super.list(queryWrapper);
+        return MenuTransform.INSTANCE.poList2VoList(poList);
     }
 }

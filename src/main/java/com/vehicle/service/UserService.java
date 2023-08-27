@@ -25,6 +25,7 @@ import com.vehicle.transform.UserTransform;
 import com.vehicle.utils.PasswordUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.CurrentHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,10 +59,6 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
         // 头像
         if (StringUtils.isBlank(userPo.getHeadUrl())) {
             userPo.setHeadUrl(Constants.DEFAULT_HEAD);
-        }
-        // 性别
-        if (null == userPo.getSex()) {
-            userPo.setSex(SexEnum.MAN.getCode());
         }
         // 密码
         if (StringUtils.isBlank(userPo.getPassword())) {
@@ -156,8 +153,7 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
     @Transactional(rollbackFor = Exception.class)
     public void saveRole(UserRoleReq req) {
         Long userId = req.getId();
-        List<UserRolePo> delPoList = userRoleService.selectByUserId(userId);
-        userRoleService.removeByIds(delPoList);
+        userRoleService.delByUserId(userId);
         List<UserRolePo> savePoList = req.getRoleIdList().stream().map(o -> {
             UserRolePo userRolePo = new UserRolePo();
             userRolePo.setUserId(userId);
@@ -165,5 +161,17 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
             return userRolePo;
         }).collect(Collectors.toList());
         userRoleService.saveBatch(savePoList);
+    }
+
+    public UserVo mine() {
+        CurrentUser currentUser = UserHolder.get();
+        UserPo po = super.getById(currentUser);
+        return UserTransform.INSTANCE.po2Vo(po);
+    }
+
+    public UserVo saveMine(UserReq req) {
+        UserPo po = UserTransform.INSTANCE.req2Po(req);
+        super.updateById(po);
+        return UserTransform.INSTANCE.po2Vo(po);
     }
 }

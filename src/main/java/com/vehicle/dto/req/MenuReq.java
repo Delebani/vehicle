@@ -12,8 +12,10 @@ import java.io.Serializable;
  * @author lijianbing
  * @date 2023/8/1 15:53
  */
-
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ApiModel(value = "MenuReq 对象", description = "MenuReq 请求对象")
 public class MenuReq implements Serializable {
 
     private static final long serialVersionUID = -6401031147260639474L;
@@ -28,5 +30,5 @@ public class MenuReq implements Serializable {
     @NotBlank(message = "请填写菜单地址")
     private String menuUrl;
 
-    private Integer sort;
+    private Integer menuSort;
 }

@@ -1,5 +1,6 @@
 package com.vehicle.controller;
 
+import com.vehicle.base.cache.CacheManager;
 import com.vehicle.base.exception.BizException;
 import com.vehicle.base.web.Response;
 import com.vehicle.dto.req.PcLoginReq;
@@ -24,15 +25,17 @@ import javax.servlet.http.HttpServletResponse;
  * @author lijianbing
  * @date 2023/7/31 15:14
  */
-@Controller
+@RestController
 @RequestMapping(value = "/logout")
 @Api(value = "登出", tags = "登出")
 @Slf4j
 public class LogoutController {
 
     @GetMapping("")
-    public String toLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return "login";
+    public Response toLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String token = request.getHeader("token");
+        CacheManager.clear(token);
+        return Response.success();
     }
 
 }
