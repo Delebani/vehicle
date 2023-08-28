@@ -2,6 +2,7 @@ package com.vehicle.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vehicle.base.web.Response;
+import com.vehicle.dto.req.UserEnableFreezeReq;
 import com.vehicle.dto.req.UserPageReq;
 import com.vehicle.dto.req.UserReq;
 import com.vehicle.dto.req.UserRoleReq;
@@ -79,5 +80,12 @@ public class UserController {
     @GetMapping(value = "/menu_tree")
     public Response<List<MenuTreeVo>> menuTree() {
         return Response.success(userService.menuTree());
+    }
+
+    @ApiOperation(value = "启用/冻结", notes = "启用/冻结")
+    @PostMapping(value = "/enable_freeze")
+    public Response enableFreeze(@Validated @RequestBody UserEnableFreezeReq req) {
+        userService.enableFreeze(req);
+        return Response.success();
     }
 }

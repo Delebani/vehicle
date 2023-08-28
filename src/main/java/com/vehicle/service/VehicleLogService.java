@@ -1,12 +1,18 @@
 package com.vehicle.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.vehicle.dto.req.VehicleLogPageReq;
+import com.vehicle.dto.vo.VehicleLogVo;
 import com.vehicle.mapper.VehicleLogMapper;
-import com.vehicle.mapper.VehicleMapper;
 import com.vehicle.po.VehicleLogPo;
-import com.vehicle.po.VehiclePo;
+import com.vehicle.transform.VehicleLogTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author lijianbing
@@ -17,4 +23,20 @@ public class VehicleLogService extends ServiceImpl<VehicleLogMapper, VehicleLogP
 
     @Autowired
     private VehicleLogMapper vehicleLogMapper;
+
+
+    public List<VehicleLogPo> findByVehicleId(Long vehicleId) {
+        LambdaQueryWrapper<VehicleLogPo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(VehicleLogPo::getVehicleId, vehicleId);
+        return super.list(queryWrapper);
+    }
+
+    public VehicleLogVo view(Long id) {
+        VehicleLogPo po = super.getById(id);
+        return VehicleLogTransform.INSTANCE.po2Vo(po);
+    }
+
+    public Page<VehicleLogVo> pages(VehicleLogPageReq req) {
+        return null;
+    }
 }

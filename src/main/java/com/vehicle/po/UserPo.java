@@ -32,6 +32,8 @@ public class UserPo implements Serializable {
 
     private String idNo;
 
+    private String department;
+
     private String duty;
 
     private String post;
@@ -41,6 +43,8 @@ public class UserPo implements Serializable {
     private String wechatId;
 
     private String token;
+
+    private Integer state;
 
     @TableField(fill = FieldFill.INSERT)
     private String creator;

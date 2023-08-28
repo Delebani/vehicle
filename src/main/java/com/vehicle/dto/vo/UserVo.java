@@ -43,6 +43,9 @@ public class UserVo implements Serializable {
     @ApiModelProperty("身份证号码")
     private String idNo;
 
+    @ApiModelProperty("部门")
+    private String department;
+
     @ApiModelProperty("职务")
     private String duty;
 
@@ -57,6 +60,10 @@ public class UserVo implements Serializable {
 
     private String token;
 
+    private Integer state;
+
+    private String stateName;
+
     private String creator;
 
     private LocalDateTime createTime;
@@ -65,5 +72,6 @@ public class UserVo implements Serializable {
 
     private LocalDateTime updateTime;
 
-    private List<Long> roleIdList = Lists.newArrayList();;
+    private List<Long> roleIdList = Lists.newArrayList();
+    ;
 }

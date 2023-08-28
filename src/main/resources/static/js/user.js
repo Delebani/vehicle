@@ -48,20 +48,21 @@ $(function () {
             },
             toolbar: '#toolbar',//表头模板id
             cols: [[
-                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', align: 'center'}
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', align: 'center',type:'checkbox'}
                 ,{field: 'name', title: '姓名', width:130, align: 'center'}
                 ,{field: 'type', title: '用户类型', width:110, sort: true, align: 'center'}
                 // ,{field: 'sex', title: '性别', width:60, align: 'center'}
                 // ,{field: 'age', title: '年龄', width: 60, align: 'center'}
                 ,{field: 'mobile', title: '手机号', width: 130, align: 'center'}
                 ,{field: 'idNo', title: '身份证号码', width: 180, align: 'center'}
-                // ,{field: 'department', title: '部门', width: 100, align: 'center'}
+                ,{field: 'department', title: '部门', width: 100, align: 'center'}
                 ,{field: 'duty', title: '职务', width: 100, align: 'center'}
                 ,{field: 'post', title: '岗位', width: 100, align: 'center'}
+                ,{field: 'stateName', title: '账号状态', width: 100, align: 'center'}
                 ,{field: 'creator', title: '创建人', width: 110,hide:true, align: 'center'}
-                ,{field: 'createTime', title: '创建时间', width: 120, hide:true, align: 'center'}
+                ,{field: 'createTime', title: '创建时间', width: 180, hide:true, align: 'center'}
                 ,{field: 'updater', title: '更新人', width: 80, hide:true, align: 'center'}
-                ,{field: 'updateTime', title: '更新时间', width: 100, hide:true, align: 'center'}
+                ,{field: 'updateTime', title: '更新时间', width: 180, hide:true, align: 'center'}
                 //,{field: 'roleIdList', title: '角色', width: 0, hide:true}
                 ,{ title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center" }//toolbar使用了一个模板
             ]],
@@ -105,7 +106,7 @@ $(function () {
                     ,"type": data.type
                     ,"mobile": data.mobile
                     ,"idNo": data.idNo
-                    // ,"department": data.department
+                    ,"department": data.department
                     ,"duty": data.duty
                     ,"post": data.post
                     ,"headUrl": data.headUrl
@@ -146,7 +147,7 @@ $(function () {
                     ,"type": data.type
                     ,"mobile": data.mobile
                     ,"idNo": data.idNo
-                    // ,"department": data.department
+                    ,"department": data.department
                     ,"duty": data.duty
                     ,"post": data.post
                     ,"headUrl": data.headUrl
@@ -207,7 +208,12 @@ $(function () {
 
         //头部工具栏事件
         table.on('toolbar(user)', function(obj){
-            var checkStatus = table.checkStatus(obj.config.id);
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data //获取选中的数据
+                ,checkedid_arr = [];
+            for (var i = 0; i < data.length; i++) {
+                checkedid_arr.push(data[i].id)
+            }
             switch(obj.event){
                 case 'add':
                     saveIndex = layer.open({
@@ -231,6 +237,60 @@ $(function () {
                     break;
                 case 'update':
                     layer.msg('编辑');
+                    break;
+                case 'enable':
+                    var req = {userIdList:checkedid_arr,state:1}
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: '/user/enable_freeze',
+                        data: JSON.stringify(req),
+                        dataType: 'json',
+                        success: function (res) {
+                            if(0 == res.code){
+                                $('#user-from')[0].reset();
+                                layer.msg('启用成功');
+                                //执行搜索重载
+                                table.reload('user', {
+                                    page: {
+                                        current: 1
+                                    }
+                                    , where: {
+                                    }
+                                }, 'data');
+                            }
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                    break;
+                case 'freeze':
+                    var req = {userIdList:checkedid_arr,state:0}
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: '/user/enable_freeze',
+                        data: JSON.stringify(req),
+                        dataType: 'json',
+                        success: function (res) {
+                            if(0 == res.code){
+                                $('#user-from')[0].reset();
+                                layer.msg('冻结成功');
+                                //执行搜索重载
+                                table.reload('user', {
+                                    page: {
+                                        current: 1
+                                    }
+                                    , where: {
+                                    }
+                                }, 'data');
+                            }
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
                     break;
             };
         });

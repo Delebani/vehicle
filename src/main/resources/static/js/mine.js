@@ -20,7 +20,7 @@ $(function () {
                     ,"type": minedata.type
                     ,"mobile": minedata.mobile
                     ,"idNo": minedata.idNo
-                    // ,"department": data.department
+                    ,"department": minedata.department
                     ,"duty": minedata.duty
                     ,"post": minedata.post
                     ,"headUrl": minedata.headUrl

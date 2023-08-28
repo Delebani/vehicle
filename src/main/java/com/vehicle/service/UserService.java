@@ -10,8 +10,8 @@ import com.google.common.collect.Lists;
 import com.vehicle.base.cas.CurrentUser;
 import com.vehicle.base.cas.UserHolder;
 import com.vehicle.base.constants.Constants;
-import com.vehicle.base.constants.SexEnum;
 import com.vehicle.base.exception.BizException;
+import com.vehicle.dto.req.UserEnableFreezeReq;
 import com.vehicle.dto.req.UserPageReq;
 import com.vehicle.dto.req.UserReq;
 import com.vehicle.dto.req.UserRoleReq;
@@ -25,7 +25,6 @@ import com.vehicle.transform.UserTransform;
 import com.vehicle.utils.PasswordUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.CurrentHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,7 +122,7 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
     }
 
     public UserPo getByMobile(String mobile) {
-        LambdaQueryWrapper<UserPo> queryWrapper = Wrappers.lambdaQuery(UserPo.class).eq(UserPo::getMobile, mobile);
+        LambdaQueryWrapper<UserPo> queryWrapper = Wrappers.lambdaQuery(UserPo.class).eq(UserPo::getMobile, mobile).last("limit 1");
         return super.getOne(queryWrapper);
     }
 
@@ -173,5 +172,15 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
         UserPo po = UserTransform.INSTANCE.req2Po(req);
         super.updateById(po);
         return UserTransform.INSTANCE.po2Vo(po);
+    }
+
+    public void enableFreeze(UserEnableFreezeReq req) {
+        if(CollectionUtils.isEmpty(req.getUserIdList()) || ObjectUtils.isNull(req.getState())){
+            return;
+        }
+        LambdaUpdateWrapper<UserPo> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(UserPo::getState, req.getState());
+        updateWrapper.in(UserPo::getId, req.getUserIdList());
+        super.update(updateWrapper);
     }
 }

@@ -23,7 +23,7 @@ public class VehiclePo implements Serializable {
 
     private String plateNo;
 
-    private Integer vehicleTypeId;
+    private Long vehicleTypeId;
 
     private Integer state;
 

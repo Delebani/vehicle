@@ -27,7 +27,6 @@ public class MenuReq implements Serializable {
     @NotBlank(message = "请填写菜单名称")
     private String menuName;
 
-    @NotBlank(message = "请填写菜单地址")
     private String menuUrl;
 
     private Integer menuSort;

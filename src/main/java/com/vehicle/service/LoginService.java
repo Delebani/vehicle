@@ -3,6 +3,7 @@ package com.vehicle.service;
 import com.vehicle.base.cache.CacheManager;
 import com.vehicle.base.constants.Constants;
 import com.vehicle.base.constants.SexEnum;
+import com.vehicle.base.constants.UserStateEnum;
 import com.vehicle.base.constants.UserTypeEnum;
 import com.vehicle.base.exception.BizException;
 import com.vehicle.dto.req.PcLoginReq;
@@ -51,6 +52,7 @@ public class LoginService {
         po.setType(UserTypeEnum.ORDINARY.getCode());
         po.setHeadUrl(Constants.DEFAULT_HEAD);
         po.setPassword(Constants.DEFAULT_PASSWORD);
+        po.setState(UserStateEnum.ENABLE.getCode());
         userService.save(po);
 
         return UserTransform.INSTANCE.po2Vo(userPo);
@@ -62,7 +64,9 @@ public class LoginService {
         if (null == userPo) {
             throw BizException.error("用户不存在");
         }
-
+        if(UserStateEnum.FREEZE.getCode() == userPo.getState()){
+            throw BizException.error("账号被冻结，请联系管理员");
+        }
         TokenUtil.setToken(userPo);
         userService.updateToken(userPo);
         return UserTransform.INSTANCE.po2Vo(userPo);

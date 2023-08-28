@@ -1,11 +1,10 @@
 package com.vehicle.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 车辆类型表
@@ -24,4 +23,15 @@ public class VehicleTypePo implements Serializable {
 
     private String typeName;
 
+    @TableField(fill = FieldFill.INSERT)
+    private String creator;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private String updater;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 }

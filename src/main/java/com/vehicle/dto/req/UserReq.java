@@ -36,9 +36,14 @@ public class UserReq implements Serializable {
     @NotBlank(message = "请填写身份证号码")
     private String idNo;
 
+    @NotBlank(message = "请填写部门")
+    private String department;
+
     @NotBlank(message = "请填写岗位")
     private String duty;
 
     @NotBlank(message = "请填写职务")
     private String post;
+
+    private Integer state;
 }

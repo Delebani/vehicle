@@ -3,49 +3,43 @@ $(function () {
     layui.use(['form', 'table'], function() {
         var $ = layui.jquery,//使用了jquery
             form = layui.form,
-            roleform = layui.form,
-            menuform = layui.form,
+            vehicleform = layui.form,
             table = layui.table,
             tree = layui.tree,
             saveIndex = 0,
-            roleIndex = 0
-            ;
-        $.get('/menu/tree',function (res) {
-            console.log(res)
-            if(0 == res.code) {
-                var menuList = res.data;
-                if(null != menuList && menuList.length > 0){
-                    var menutree_data  = [];
-                    for (var i = 0; i < menuList.length; i++) {
-                        var children =  menuList[i].children;
-                        var children_tree = [];
-                        if(null != children && children.length > 0){
-                            for (var j = 0; j < children.length; j++) {
-                                children_tree.push({title:children[j].menuName,id:children[j].id,field:'menu'})
-                            }
-                        }
-                        menutree_data.push({title:menuList[i].menuName,id:menuList[i].id,field:'menu',children:children_tree,spread: true})
-                    }
-                    tree.render({
-                        elem: '#menutree'  //绑定元素
-                        ,id: 'menutreeid'
-                        ,showCheckbox: true
-                        ,data: menutree_data
-                    });
+            vehicleIndex = 0,
+            plateNoReg ="^([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[a-zA-Z](([DF]((?![IO])[a-zA-Z0-9](?![IO]))[0-9]{4})|([0-9]{5}[DF]))|[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1})$";
+
+        form.verify({
+            plateNo: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp(plateNoReg).test(value)) {
+                    return '车牌号格式不正确，请重新填写';
                 }
+            }
+        })
+
+        $.get('/vehicle_type/all',function (res) {
+            if(0 == res.code) {
+                var typeList = res.data;
+                $('#vehicleTypeId4searchselect').append('<option value="">全部</option>');
+                for (var i = 0; i < typeList.length; i++) {
+                    $('#vehicleTypeId4searchselect').append('<option value="'+ typeList[i].id +'">'+ typeList[i].typeName +'</option>');
+                    $('#vehicleTypeId4addselect').append('<option value="'+ typeList[i].id +'">'+ typeList[i].typeName +'</option>');
+                }
+                form.render('select'); // 重新渲染 select 元素
             }
         });
 
         //执行渲染
         table.render({
-            elem: '#role',
-            url: '../role/page',//后台接口地址
+            elem: '#vehicle',
+            url: '../vehicle/page',//后台接口地址
             request: {
                 pageName: 'current' //页码的参数名称，默认：page
                 ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
             },
             method:'post',
-            where:{'roleName':''},
+            where:{'plateNo':'','vehicleTypeId':'','state':''},
             contentType: 'application/json',
             done: function (res) {
                 handleRes(res);
@@ -63,7 +57,9 @@ $(function () {
             toolbar: '#toolbar',//表头模板id
             cols: [[
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', align: 'center'}
-                ,{field: 'roleName', title: '角色名称', width:130, align: 'center'}
+                ,{field: 'plateNo', title: '车牌号', width:130, align: 'center'}
+                ,{field: 'vehicleTypeName', title: '车辆类型', width:130, align: 'center'}
+                ,{field: 'stateName', title: '出车状态', width:130, align: 'center'}
                 ,{field: 'creator', title: '创建人', width: 110,hide:true, align: 'center'}
                 ,{field: 'createTime', title: '创建时间', width: 180, hide:true, align: 'center'}
                 ,{field: 'updater', title: '更新人', width: 80, hide:true, align: 'center'}
@@ -79,14 +75,16 @@ $(function () {
         });
         form.on('submit(data-search-btn)', function (data) {
             var searchdata = data.field;//将数据进行json话发送给后台
-
+            console.log(searchdata);
             //执行搜索重载
-            table.reload('role', {
+            table.reload('vehicle', {
                 page: {
                     current: 1
                 }
                 , where: {
-                    'roleName':searchdata.roleName,
+                    'plateNo':searchdata.plateNo,
+                    'vehicleTypeId':searchdata.vehicleTypeId,
+                    'state':searchdata.state,
                 }
             }, 'data');
 
@@ -94,33 +92,35 @@ $(function () {
         });
 
         //工具条事件
-        table.on('tool(role)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        table.on('tool(vehicle)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 
             if(layEvent === 'detail'){ //查看
-                form.val("roleview", {
-                    "id":data.id
-                    ,"roleName": data.roleName
+                form.val("vehicleview", {
+                    "id":data.id,
+                    'plateNo':data.plateNo,
+                    'vehicleTypeName':data.vehicleTypeName,
+                    'stateName':data.stateName,
 
                 });
                 layui.$('#savebtn').hide();
                 layer.open({
                     type: 1,
                     title:'查看角色',
-                    area: ['900px', '200px'],
+                    area: ['900px', '300px'],
                     offset: '100px',
-                    content: $('#roleview') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    content: $('#vehicleview') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                     ,cancel: function(index, layero){
                             layer.close(index);
-                            $('#roleview')[0].reset();
+                            $('#vehicleview')[0].reset();
                     },
                 });
             } else if(layEvent === 'del'){ //删除
                 layer.confirm('真的删除吗', function(index){
                     // 向服务端发送删除指令
-                    $.get('/role/del?id='+data.id,function (res) {
+                    $.get('/vehicle/del?id='+data.id,function (res) {
                         if(0 == res.code) {
                             layer.msg('删除成功');
                             obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
@@ -129,21 +129,23 @@ $(function () {
                     })
                 });
             } else if(layEvent === 'edit'){ //编辑
-                form.val("rolefrom", {
-                    "id":data.id
-                    ,"roleName": data.roleName
+                form.val("vehiclefrom", {
+                    "id":data.id,
+                    'plateNo':data.plateNo,
+                    'vehicleTypeId':data.vehicleTypeId,
+                    'state':data.state,
 
                 });
                 layui.$('#savebtn').show();
                 saveIndex = layer.open({
                     type: 1,
                     title:'编辑角色',
-                    area: ['900px', '200px'],
+                    area: ['900px', '500px'],
                     offset: '100px',
-                    content: $('#rolefrom') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    content: $('#vehiclefrom') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                     ,cancel: function(index, layero){
                         layer.close(index);
-                        $('#rolefrom')[0].reset();
+                        $('#vehiclefrom')[0].reset();
                     },
                 });
 
@@ -152,46 +154,23 @@ $(function () {
                 //     username: '123'
                 //     ,title: 'xxx'
                 // });
-            } else if(layEvent === 'menu'){
-                console.log(data.menuIdList)
-                tree.setChecked('menutreeid', data.menuIdList);
-                form.val("menufrom", {
-                    "id":data.id
-                })
-                // 重新渲染复选框
-                form.render('checkbox');
-                roleIndex = layer.open({
-                    type: 1,
-                    title:'角色菜单授权',
-                    area: ['900px', '500px'],
-                    offset: '100px',
-                    content: $('#menufrom') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                    // ,success: function(layero, index){
-                    //     console.log(layero, index);
-                    // }
-                    ,cancel: function(index, layero){
-                        layer.close(index);
-                        $('#menufrom')[0].reset();
-                    },
-
-                });
             }
         });
 
         //头部工具栏事件
-        table.on('toolbar(role)', function(obj){
+        table.on('toolbar(vehicle)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'add':
                     saveIndex = layer.open({
                         type: 1,
                         title:'添加角色',
-                        area: ['900px', '200px'],
+                        area: ['900px', '500px'],
                         offset: '100px',
-                        content: $('#rolefrom') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        content: $('#vehiclefrom') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                         ,cancel: function(index, layero){
                             layer.close(index);
-                            $('#rolefrom')[0].reset();
+                            $('#vehiclefrom')[0].reset();
                         },
                     });
                     layui.$('#savebtn').show();
@@ -206,64 +185,22 @@ $(function () {
         });
 
         // 新增
-        roleform.on('submit(savebtn)', function (data) {
+        vehicleform.on('submit(savebtn)', function (data) {
             var savedata = data.field;//将数据进行json话发送给后台
             // console.log(savedata)
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-                url: '/role/save_or_update',
+                url: '/vehicle/save_or_update',
                 data: JSON.stringify(savedata),
                 dataType: 'json',
                 success: function (res) {
                     console.log(res)
                     if(0 == res.code){
-                        $('#rolefrom')[0].reset();
+                        $('#vehiclefrom')[0].reset();
                         layer.msg("保存成功");
                         //执行搜索重载
-                        table.reload('role', {
-                            page: {
-                                current: 1
-                            }
-                            , where: {
-                            }
-                        }, 'data');
-                        layer.close(saveIndex);
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                }
-            })
-
-            return false;
-        });
-
-
-        menuform.on('submit(menubtn)', function (data) {
-            var checkData = tree.getChecked('menutreeid');
-
-            //将页面全部复选框选中的值拼接到一个数组中
-            var menuid_arr = [];
-            $('input[type=checkbox]:checked').each(function() {
-                menuid_arr.push($(this).val());
-            });
-            var savejson = {'id': data.field.id,'menuIdList':menuid_arr}
-            console.log(savejson);
-            $.ajax({
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                url: '/role/save_menu',
-                data: JSON.stringify(savejson),
-                dataType: 'json',
-                success: function (res) {
-                    console.log(res)
-                    if(0 == res.code){
-                        $('#menufrom')[0].reset();
-                        layer.msg("保存成功");
-                        layer.close(roleIndex);
-                        //执行搜索重载
-                        table.reload('role', {
+                        table.reload('vehicle', {
                             page: {
                                 current: 1
                             }

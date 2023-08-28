@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.common.collect.Lists;
 import com.vehicle.base.exception.BizException;
 import com.vehicle.dto.req.RoleMenuReq;
 import com.vehicle.dto.req.RolePageReq;
@@ -22,7 +21,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +47,18 @@ public class RoleService extends ServiceImpl<RoleMapper, RolePo> {
     private UserRoleService userRoleService;
 
     public void saveOrUpdate(RoleReq req) {
-        super.saveOrUpdate(RoleTransform.INSTANCE.req2Po(req));
+        RolePo rolePo = RoleTransform.INSTANCE.req2Po(req);
+        LambdaQueryWrapper<RolePo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(RolePo::getRoleName, req.getRoleName());
+        queryWrapper.last("limit 1");
+        RolePo nameRolePo = super.getOne(queryWrapper);
+        if (null == req.getId() && null != nameRolePo) {
+            throw BizException.error("该用角色名称已存在，请确认");
+        }
+        if (null != req.getId() && null != nameRolePo && req.getId() != nameRolePo.getId()) {
+            throw BizException.error("该用角色名称已存在，请确认");
+        }
+        super.saveOrUpdate(rolePo);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -79,7 +88,7 @@ public class RoleService extends ServiceImpl<RoleMapper, RolePo> {
         List<RoleVo> list = voPage.getRecords();
         // 角色菜单集合
         Set<Long> roleIdSet = list.stream().map(RoleVo::getId).collect(Collectors.toSet());
-        if(CollectionUtils.isEmpty(roleIdSet)){
+        if (CollectionUtils.isEmpty(roleIdSet)) {
             return voPage;
         }
         List<RoleMenuPo> roleMenuList = roleMenuService.findByRoleIdin(roleIdSet);

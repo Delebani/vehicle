@@ -59,4 +59,16 @@ public class PagesController {
         return "/pages/mine";
     }
 
+    @GetMapping("/vehicle")
+    public String vehic() throws Exception {
+
+        return "/pages/vehicle";
+    }
+
+    @GetMapping("/vehicletype")
+    public String vehicType() throws Exception {
+
+        return "/pages/vehicletype";
+    }
+
 }
