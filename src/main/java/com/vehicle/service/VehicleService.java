@@ -1,17 +1,19 @@
 package com.vehicle.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.vehicle.base.constants.VehicleStateEnum;
 import com.vehicle.base.exception.BizException;
 import com.vehicle.dto.req.VehiclePageReq;
 import com.vehicle.dto.req.VehicleReq;
 import com.vehicle.dto.vo.VehicleVo;
 import com.vehicle.mapper.VehicleMapper;
-import com.vehicle.po.VehicleLogPo;
+import com.vehicle.po.ApplyLogPo;
 import com.vehicle.po.VehiclePo;
 import com.vehicle.po.VehicleTypePo;
 import com.vehicle.transform.VehicleTransform;
@@ -40,7 +42,7 @@ public class VehicleService extends ServiceImpl<VehicleMapper, VehiclePo> {
     private VehicleTypeService vehicleTypeService;
 
     @Autowired
-    private VehicleLogService vehicleLogService;
+    private ApplyLogService applyLogService;
 
     public void saveOrUpdate(VehicleReq req) {
         VehiclePo po = VehicleTransform.INSTANCE.req2Po(req);
@@ -60,7 +62,7 @@ public class VehicleService extends ServiceImpl<VehicleMapper, VehiclePo> {
 
     public void del(Long id) {
 
-        List<VehicleLogPo> logPoList = vehicleLogService.findByVehicleId(id);
+        List<ApplyLogPo> logPoList = applyLogService.findByVehicleId(id);
         if (CollectionUtils.isNotEmpty(logPoList)) {
             throw BizException.error("车辆存在使用记录，不可删除");
         }
@@ -100,5 +102,26 @@ public class VehicleService extends ServiceImpl<VehicleMapper, VehiclePo> {
         LambdaQueryWrapper<VehiclePo> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(VehiclePo::getVehicleTypeId, vehicleTypeId);
         return super.list(queryWrapper);
+    }
+
+    public List<VehiclePo> findByVehicleTypeIdAndState(Long vehicleTypeId, Integer state) {
+        LambdaQueryWrapper<VehiclePo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(VehiclePo::getVehicleTypeId, vehicleTypeId);
+        queryWrapper.eq(VehiclePo::getState, state);
+        return super.list(queryWrapper);
+    }
+
+    public void departure(Long vehicleId) {
+        LambdaUpdateWrapper<VehiclePo> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(VehiclePo::getState, VehicleStateEnum.YES.getCode());
+        updateWrapper.eq(VehiclePo::getId, vehicleId);
+        super.update(updateWrapper);
+    }
+
+    public void returnVehicle(Long vehicleId) {
+        LambdaUpdateWrapper<VehiclePo> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(VehiclePo::getState, VehicleStateEnum.NO.getCode());
+        updateWrapper.eq(VehiclePo::getId, vehicleId);
+        super.update(updateWrapper);
     }
 }

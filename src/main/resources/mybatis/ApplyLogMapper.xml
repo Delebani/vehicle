@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.mapper.ApplyLogMapper">
+
+    <select id="listByReq" resultType="com.vehicle.dto.vo.ApplyLogVo">
+        select a.id,
+        a.apply_user_id,
+        au.name apply_user_name,
+        a.vehicle_type_id,
+        vt.type_name vehicle_type_name,
+        a.vehicle_id,
+        v.plate_no plate_no,
+        a.apply_time,
+        a.departure,
+        a.dest,
+        a.start_time,
+        a.end_time,
+        a.people_num,
+        a.apply_reason_id,
+        ar.reason apply_reason,
+        a.remark,
+        a.approve_id,
+        apv.approve_user_id approve_user_id,
+        apv.approve_user_name approve_user_name,
+        apv.approve_state approve_state,
+        apv.approve_time approve_time,
+        apv.approve_notes approve_notes,
+        aud.name driver_user_name,
+        a.return_time,
+        a.mileage
+        a.state
+        from
+        apply_log a
+        left join user au on a.apply_user_id = au.id
+        left join vehicle_type vt on a.vehicle_type_id = vt.id
+        left join vehicle v on a.vehicle_id = v.id
+        left join apply_reason ar on a.apply_reason_id = ar.id
+        left join approve apv on a.approve_id = apv.id
+        left join user aud on a.driver_user_id = aud.id
+        <include refid="search_apply_log_where"/>
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="countByReq" resultType="java.lang.Integer">
+        select count(1)
+        from
+        apply_log a
+        left join user au on a.apply_user_id = au.id
+        left join vehicle_type vt on a.vehicle_type_id = vt.id
+        left join vehicle v on a.vehicle_id = v.id
+        left join apply_reason ar on a.apply_reason_id = ar.id
+        left join approve apv on a.approve_id = apv.id
+        left join user aud on a.driver_user_id = aud.id
+        <include refid="search_apply_log_where"/>
+    </select>
+    <sql id="search_apply_log_where">
+        <where>
+            <if test="applyUserName != null and applyUserName != ''">
+                AND au.name LIKE CONCAT('%', #{applyUserName}, '%')
+            </if>
+            <if test="plateNo != null and plateNo != ''">
+                AND v.plate_no LIKE CONCAT('%', #{plateNo}, '%')
+            </if>
+            <if test="vehicleTypeId != null">
+                AND au.vehicle_type_id = #{vehicleTypeId}
+            </if>
+            <if test="approveState != null">
+                AND apv.approve_state = #{approveState}
+            </if>
+        </where>
+    </sql>
+</mapper>

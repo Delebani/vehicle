@@ -71,4 +71,17 @@ public class PagesController {
         return "/pages/vehicletype";
     }
 
+
+    @GetMapping("/applyreason")
+    public String applyreason() throws Exception {
+
+        return "/pages/applyreason";
+    }
+
+    @GetMapping("/applylog")
+    public String applylog() throws Exception {
+
+        return "/pages/applylog";
+    }
+
 }

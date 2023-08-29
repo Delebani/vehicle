@@ -23,4 +23,8 @@ public abstract class AbstractPaging implements Serializable {
      */
     @ApiModelProperty(value = "每页量")
     protected Long pageSize = 10L;
+
+    private Long getStartIndex() {
+        return (current - 1) * pageSize;
+    }
 }

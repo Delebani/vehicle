@@ -1,7 +1,8 @@
 package com.vehicle.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.vehicle.po.VehicleLogPo;
+import com.vehicle.po.ApplyReasonPo;
+import com.vehicle.po.VehiclePo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2023/7/31 14:28
  */
 @Mapper
-public interface VehicleLogMapper extends BaseMapper<VehicleLogPo> {
+public interface ApplyReasonMapper extends BaseMapper<ApplyReasonPo> {
 }

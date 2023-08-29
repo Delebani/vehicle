@@ -10,6 +10,9 @@ import com.google.common.collect.Lists;
 import com.vehicle.base.cas.CurrentUser;
 import com.vehicle.base.cas.UserHolder;
 import com.vehicle.base.constants.Constants;
+import com.vehicle.base.constants.DutyStateEnum;
+import com.vehicle.base.constants.UserStateEnum;
+import com.vehicle.base.constants.UserTypeEnum;
 import com.vehicle.base.exception.BizException;
 import com.vehicle.dto.req.UserEnableFreezeReq;
 import com.vehicle.dto.req.UserPageReq;
@@ -175,12 +178,48 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
     }
 
     public void enableFreeze(UserEnableFreezeReq req) {
-        if(CollectionUtils.isEmpty(req.getUserIdList()) || ObjectUtils.isNull(req.getState())){
+        if (CollectionUtils.isEmpty(req.getUserIdList()) || ObjectUtils.isNull(req.getState())) {
             return;
         }
         LambdaUpdateWrapper<UserPo> updateWrapper = Wrappers.lambdaUpdate();
         updateWrapper.set(UserPo::getState, req.getState());
         updateWrapper.in(UserPo::getId, req.getUserIdList());
+        super.update(updateWrapper);
+    }
+
+    public List<UserPo> findByTypeAndStateAndDutyState(Integer type, Integer state, Integer dutyState) {
+        LambdaQueryWrapper<UserPo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(UserPo::getType, type);
+        queryWrapper.eq(UserPo::getState, state);
+        queryWrapper.eq(UserPo::getDutyState, dutyState);
+        queryWrapper.orderByAsc(UserPo::getUserSort);
+        return super.list(queryWrapper);
+    }
+
+    public void driverSort(Long id) {
+        LambdaQueryWrapper<UserPo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(UserPo::getType, UserTypeEnum.DRIVER.getCode());
+        queryWrapper.eq(UserPo::getState, UserStateEnum.ENABLE.getCode());
+        queryWrapper.eq(UserPo::getDutyState, DutyStateEnum.ON.getCode());
+        queryWrapper.orderByDesc(UserPo::getUserSort);
+        queryWrapper.last("limit 1");
+        UserPo onDutyDriver = super.getOne(queryWrapper);
+        Integer userSort = 0;
+        if(null != onDutyDriver){
+            userSort = onDutyDriver.getUserSort() + 1;
+        }
+
+        LambdaUpdateWrapper<UserPo> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(UserPo::getDutyState, DutyStateEnum.ON.getCode());
+        updateWrapper.set(UserPo::getUserSort, userSort);
+        updateWrapper.eq(UserPo::getId, id);
+        super.update(updateWrapper);
+    }
+
+    public void departure(Long id) {
+        LambdaUpdateWrapper<UserPo> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(UserPo::getDutyState, DutyStateEnum.OUT.getCode());
+        updateWrapper.eq(UserPo::getId, id);
         super.update(updateWrapper);
     }
 }

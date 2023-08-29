@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
  * @author lijianbing
  * @date 2023/7/31 13:49
  */
-@TableName("vehicle_log")
+@TableName("apply_log")
 @Data
-public class VehicleLogPo implements Serializable {
+public class ApplyLogPo implements Serializable {
 
 
     private static final long serialVersionUID = -5657346222499315341L;
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private Long applyId;
+    private Long applyUserId;
 
     private Long vehicleTypeId;
 
@@ -30,17 +30,19 @@ public class VehicleLogPo implements Serializable {
 
     private LocalDateTime applyTime;
 
+    private String departure;
+
     private String dest;
 
-    private Integer applyReason;
+    private LocalDateTime startTime;
+
+    private LocalDateTime endTime;
+
+    private Integer peopleNum;
+
+    private Long applyReasonId;
 
     private String remark;
-
-    private Long approveId;
-
-    private Integer approveState;
-
-    private LocalDateTime approveTime;
 
     private Long driverUserId;
 
@@ -48,6 +50,9 @@ public class VehicleLogPo implements Serializable {
 
     private BigDecimal mileage;
 
+    private Long approveId;
+
+    private Integer state;
 
     @TableField(fill = FieldFill.INSERT)
     private String creator;

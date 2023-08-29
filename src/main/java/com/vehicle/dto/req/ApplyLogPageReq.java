@@ -13,10 +13,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "VehicleLogPageReq 对象", description = "VehicleLogPageReq 请求对象")
-public class VehicleLogPageReq extends AbstractPaging {
+@ApiModel(value = "ApplyLogPageReq 对象", description = "ApplyLogPageReq 请求对象")
+public class ApplyLogPageReq extends AbstractPaging {
 
     private static final long serialVersionUID = -5760621996269112292L;
+
+    @ApiModelProperty("申请人")
+    private String applyUserName;
 
     @ApiModelProperty("车牌号")
     private String plateNo;

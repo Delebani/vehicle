@@ -2,10 +2,10 @@ package com.vehicle.transform;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vehicle.base.constants.VehicleStateEnum;
-import com.vehicle.dto.vo.VehicleLogVo;
-import com.vehicle.po.VehicleLogPo;
+import com.vehicle.dto.req.ApplyLogReq;
+import com.vehicle.dto.vo.ApplyLogVo;
+import com.vehicle.po.ApplyLogPo;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
@@ -14,14 +14,16 @@ import org.mapstruct.factory.Mappers;
  * @date 2023/8/1 15:58
  */
 @Mapper(imports = VehicleStateEnum.class)
-public interface VehicleLogTransform {
+public interface ApplyLogTransform {
 
-    VehicleLogTransform INSTANCE = Mappers.getMapper(VehicleLogTransform.class);
+    ApplyLogTransform INSTANCE = Mappers.getMapper(ApplyLogTransform.class);
 
 
     @Mappings({
     })
-    VehicleLogVo po2Vo(VehicleLogPo po);
+    ApplyLogVo po2Vo(ApplyLogPo po);
 
-    Page<VehicleLogVo> poPage2VoPage(Page<VehicleLogPo> poPage);
+    Page<ApplyLogVo> poPage2VoPage(Page<ApplyLogPo> poPage);
+
+    ApplyLogPo req2po(ApplyLogReq req);
 }

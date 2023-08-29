@@ -1,54 +1,40 @@
 package com.vehicle.po;
 
 import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户表
+ * 车辆使用记录表
  *
  * @author lijianbing
  * @date 2023/7/31 13:49
  */
-@TableName("user")
+@TableName("approve")
 @Data
-public class UserPo implements Serializable {
+public class ApprovePo implements Serializable {
 
-    private static final long serialVersionUID = 5134633716943393613L;
+    private static final long serialVersionUID = 338595900540304273L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private String name;
+    private Long applyUserId;
 
-    private Integer type;
+    private Integer approveType;
 
-    private String mobile;
+    private Long approveUserId;
 
-    private String headUrl;
+    private String approveUserName;
 
-    private String idNo;
+    private Integer approveState;
 
-    private String department;
+    private LocalDateTime approveTime;
 
-    private String duty;
+    private String approveNotes;
 
-    private String post;
-
-    private String password;
-
-    private String wechatId;
-
-    private String token;
-
-    private Integer state;
-
-    private Integer dutyState;
-
-    private Integer userSort;
 
     @TableField(fill = FieldFill.INSERT)
     private String creator;
