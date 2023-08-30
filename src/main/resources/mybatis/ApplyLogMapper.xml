@@ -27,7 +27,7 @@
         apv.approve_notes approve_notes,
         aud.name driver_user_name,
         a.return_time,
-        a.mileage
+        a.mileage,
         a.state
         from
         apply_log a
@@ -61,7 +61,7 @@
                 AND v.plate_no LIKE CONCAT('%', #{plateNo}, '%')
             </if>
             <if test="vehicleTypeId != null">
-                AND au.vehicle_type_id = #{vehicleTypeId}
+                AND a.vehicle_type_id = #{vehicleTypeId}
             </if>
             <if test="approveState != null">
                 AND apv.approve_state = #{approveState}

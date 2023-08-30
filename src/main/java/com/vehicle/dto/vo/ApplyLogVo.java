@@ -33,7 +33,7 @@ public class ApplyLogVo implements Serializable {
 
     private Long vehicleId;
 
-    private Long plateNo;
+    private String plateNo;
 
     private LocalDateTime applyTime;
 

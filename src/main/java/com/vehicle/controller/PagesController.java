@@ -78,10 +78,10 @@ public class PagesController {
         return "/pages/applyreason";
     }
 
-    @GetMapping("/applylog")
+    @GetMapping("/applyvehicle")
     public String applylog() throws Exception {
 
-        return "/pages/applylog";
+        return "/pages/applyvehicle";
     }
 
 }

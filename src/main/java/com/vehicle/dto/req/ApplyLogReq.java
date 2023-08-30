@@ -25,6 +25,7 @@ public class ApplyLogReq implements Serializable {
 
     private Long applyUserId;
 
+    @NotNull(message = "请填写申请类型")
     private Integer applyType;
 
     @NotNull(message = "请填写申请车辆类型")
@@ -49,7 +50,7 @@ public class ApplyLogReq implements Serializable {
     @NotNull(message = "请填写用车人数")
     private Integer peopleNum;
 
-    @NotBlank(message = "请填写申请原因")
+    @NotNull(message = "请填写申请原因")
     private Long applyReasonId;
 
     private String remark;

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/img/icon.png">
+    <title>车辆管理平台</title>
+    <meta charset="UTF-8">
+    <!--<link href="/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="/layui/css/layui.css">
+
+    <script type="text/javascript" src="/js/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="/js/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="/js/xcConfirm.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <script type="text/javascript" src="/js/applyvehicle.js"></script>
+
+</head>
+<body>
+<!--搜索框-->
+<form class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">申请人</label>
+            <div class="layui-input-block">
+                <input type="text" name="applyUserName" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">车牌号</label>
+            <div class="layui-input-block">
+                <input type="text" name="plateNo" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">车辆类型</label>
+            <div class="layui-input-block">
+                <select id="vehicleTypeId4searchselect" name="vehicleTypeId" lay-filter="vehicleTypeId4search">
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">审核状态</label>
+            <div class="layui-input-block">
+                <select name="approveState" lay-filter="userType">
+                    <option value="">全部</option>
+                    <option value="1">审核中</option>
+                    <option value="2">已通过</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn" lay-submit lay-filter="data-search-btn">搜索</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!---表头操作--->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="submit"> 用车申请 </button>
+        <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="pressing"> 紧急用车申请 </button>
+    </div>
+</script>
+
+<table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+<script type="text/html" id="currentTableBar">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+</script>
+<table id="applyvehicle" lay-filter="applyvehicle"></table>
+
+<!--add-->
+<form class="layui-form" lay-filter="applyvehiclefrom" style="padding-top:20px" id="applyvehiclefrom" hidden="true">
+    <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <input type="text" name="applyType" class="layui-hide">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="text" name="vehicleTypeId" class="layui-hide">
+            <label class="layui-form-label">车辆类型:</label>
+            <div class="layui-input-block">
+                <select id ="vehicleTypeId4addselect" name="vehicleTypeId" required lay-verify="required" lay-filter="vehicleTypeId4add">
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">使用人数:</label>
+            <div class="layui-input-block">
+                <input type="number" name="peopleNum" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">出发地:</label>
+            <div class="layui-input-block">
+                <input type="text" name="departure" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">目的地:</label>
+            <div class="layui-input-block">
+                <input type="text" name="dest" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间:</label>
+            <div class="layui-input-block">
+                <input id="startTime" type="text" name="startTime" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束时间:</label>
+            <div class="layui-input-block">
+                <input id="endTime" type="text" name="endTime" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">申请原因:</label>
+            <div class="layui-input-block">
+                <select id ="applyReason4addselect" name="applyReasonId" required lay-verify="required" lay-filter="applyReasonId">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+        <label class="layui-form-label">备注:</label>
+        <div class="layui-input-block">
+            <textarea name="remark" placeholder="请输入" style="width: 460px" class="layui-textarea"></textarea>
+        </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="savebtn" class="layui-btn" lay-submit lay-filter="savebtn">提交</button>
+        </div>
+    </div>
+</form>
+
+<!--查看-->
+<form class="layui-form" lay-filter="applyvehicleview" style="padding-top:20px" id="applyvehicleview" hidden="true">
+    <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <input type="text" name="id" class="layui-hide">
+    <input type="text" name="applyUserId" class="layui-hide">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label required">申请人:</label>
+            <div class="layui-input-block">
+                <input type="text" name="applyUserName" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">申请时间:</label>
+            <div class="layui-input-block">
+                <input type="text" name="applyTime" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <input type="text" name="state" class="layui-hide">
+            <label class="layui-form-label">申请单状态:</label>
+            <div class="layui-input-block">
+                <input type="text" name="stateName" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="text" name="vehicleTypeId" class="layui-hide">
+            <label class="layui-form-label">车辆类型:</label>
+            <div class="layui-input-block">
+                <input type="text" name="vehicleTypeName" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">使用人数:</label>
+            <div class="layui-input-block">
+                <input type="text" name="peopleNum" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" maxlength="18" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">出发地:</label>
+            <div class="layui-input-block">
+                <input type="text" name="departure" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">目的地:</label>
+            <div class="layui-input-block">
+                <input type="text" name="dest" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间:</label>
+            <div class="layui-input-block">
+                <input type="text" name="startTime" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" maxlength="18" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束时间:</label>
+            <div class="layui-input-block">
+                <input type="text" name="endTime" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" maxlength="18" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="text" name="applyReasonId" class="layui-hide">
+            <label class="layui-form-label">申请原因:</label>
+            <div class="layui-input-block">
+                <input type="text" name="applyReason" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">备注:</label>
+            <div class="layui-input-block">
+                <textarea name="remark" placeholder="" style="width: 460px" class="layui-textarea" disabled></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="text" name="driverUserId" class="layui-hide">
+            <label class="layui-form-label">出车司机:</label>
+            <div class="layui-input-block">
+                <input type="text" name="driverUserName" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <input type="text" name="vehicleId" class="layui-hide">
+            <label class="layui-form-label">出车车辆:</label>
+            <div class="layui-input-block">
+                <input type="text" name="plateNo" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">还车时间:</label>
+            <div class="layui-input-block">
+                <input type="text" name="returnTime" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">行驶里程:</label>
+            <div class="layui-input-block">
+                <input type="text" name="mileage" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="text" name="approveState" class="layui-hide">
+            <label class="layui-form-label">审核状态:</label>
+            <div class="layui-input-block">
+                <input type="text" name="approveStateName" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <input type="text" name="approveId" class="layui-hide">
+            <input type="text" name="approveUsreId" class="layui-hide">
+            <label class="layui-form-label">审核人:</label>
+            <div class="layui-input-block">
+                <input type="text" name="approveUsreName" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">审核时间:</label>
+            <div class="layui-input-block">
+                <input type="text" name="approveTime" placeholder="" autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">审核备注:</label>
+            <div class="layui-input-block">
+                <textarea name="approveNotes" placeholder="" style="width: 460px" class="layui-textarea" disabled></textarea>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

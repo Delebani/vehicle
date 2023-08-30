@@ -52,7 +52,7 @@ $(function () {
             var searchdata = data.field;//将数据进行json话发送给后台
 
             //执行搜索重载
-            table.reload('type', {
+            table.reload('reason', {
                 page: {
                     current: 1
                 }
@@ -99,7 +99,7 @@ $(function () {
                     })
                 });
             } else if(layEvent === 'edit'){ //编辑
-                form.val("typefrom", {
+                form.val("reasonfrom", {
                     "id":data.id
                     ,"reason": data.reason
 
@@ -126,7 +126,7 @@ $(function () {
         });
 
         //头部工具栏事件
-        table.on('toolbar(type)', function(obj){
+        table.on('toolbar(reason)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'add':
@@ -165,10 +165,10 @@ $(function () {
                 success: function (res) {
                     console.log(res)
                     if(0 == res.code){
-                        $('#typefrom')[0].reset();
+                        $('#reasonfrom')[0].reset();
                         layer.msg("保存成功");
                         //执行搜索重载
-                        table.reload('type', {
+                        table.reload('reason', {
                             page: {
                                 current: 1
                             }

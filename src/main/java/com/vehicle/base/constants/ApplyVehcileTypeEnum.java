@@ -5,18 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 用户状态
+ * 审批类型
  *
  * @author lijianbing
  * @date 2023/8/1 16:09
  */
 @AllArgsConstructor
 @Getter
-public enum ApproveStateEnum {
+public enum ApplyVehcileTypeEnum {
 
-    APPROVING(1, "审核中"),
-    PASS(2, "已通过"),
-    REFUSE(3, "被拒绝"),
+    NORMAL(1, "正常"),
+    PRESSING(2, "紧急"),
 
     ;
 
@@ -25,12 +24,12 @@ public enum ApproveStateEnum {
 
     private String desc;
 
-    public static ApproveStateEnum getByCode(Integer code) {
-        for (ApproveStateEnum value : ApproveStateEnum.values()) {
+    public static ApplyVehcileTypeEnum getByCode(Integer code) {
+        for (ApplyVehcileTypeEnum value : ApplyVehcileTypeEnum.values()) {
             if (value.getCode().equals(code)) {
                 return value;
             }
         }
-        return null;
+        return NORMAL;
     }
 }

@@ -19,6 +19,7 @@ import com.vehicle.po.VehicleTypePo;
 import com.vehicle.transform.VehicleTransform;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class VehicleService extends ServiceImpl<VehicleMapper, VehiclePo> {
     private VehicleTypeService vehicleTypeService;
 
     @Autowired
+    @Lazy
     private ApplyLogService applyLogService;
 
     public void saveOrUpdate(VehicleReq req) {

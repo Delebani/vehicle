@@ -22,6 +22,8 @@ public class ApplyLogPo implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    private Integer applyType;
+
     private Long applyUserId;
 
     private Long vehicleTypeId;

@@ -89,7 +89,10 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
         Page<ApplyLogVo> voPage = new Page<>(req.getCurrent(), req.getPageSize());
         List<ApplyLogVo> voList = applyLogMapper.listByReq(req);
         voList.forEach(o -> {
-            o.setApproveStateName(ApproveStateEnum.getByCode(o.getApproveState()).getDesc());
+            ApproveStateEnum approveStateEnum = ApproveStateEnum.getByCode(o.getApproveState());
+            if (null != approveStateEnum) {
+                o.setApproveStateName(approveStateEnum.getDesc());
+            }
             o.setStateName(ApplyVehcileStateEnum.getByCode(o.getState()).getDesc());
         });
         voPage.setRecords(voList);
@@ -111,15 +114,20 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
 
         po.setApplyUserId(currentUser.getId());
         po.setApplyTime(LocalDateTime.now());
+        if (ApplyVehcileTypeEnum.PRESSING.getCode() == req.getApplyType()) {
+            // 紧急用车
+            handle(po);
+        } else {
+            // 提交审批
+            ApprovePo approvePo = new ApprovePo();
+            approvePo.setApplyUserId(currentUser.getId());
+            approvePo.setApproveType(ApproveTypeEnum.VEHICLE.getCode());
+            approvePo.setApproveState(ApproveStateEnum.APPROVING.getCode());
+            approveService.save(approvePo);
+            po.setApproveId(approvePo.getId());
+        }
 
-        // 提交审批
-        ApprovePo approvePo = new ApprovePo();
-        approvePo.setApplyUserId(currentUser.getId());
-        approvePo.setApproveType(ApproveTypeEnum.VEHICLE.getCode());
-        approvePo.setApproveState(ApproveStateEnum.APPROVING.getCode());
-        approveService.save(approvePo);
-        po.setApproveId(approvePo.getId());
-        super.saveOrUpdate(po);
+        super.save(po);
     }
 
     public void approvePass(Long approveId) {
@@ -127,10 +135,15 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
         if (null == po) {
             throw BizException.error("申请用车审核信息未找到");
         }
+        handle(po);
+        super.updateById(po);
+    }
+
+    private void handle(ApplyLogPo po) {
         // 分配车辆
         List<VehiclePo> vehiclePoList = vehicleService.findByVehicleTypeIdAndState(po.getVehicleTypeId(), VehicleStateEnum.NO.getCode());
         if (CollectionUtils.isEmpty(vehiclePoList)) {
-            throw BizException.error("审批失败，无可用车辆");
+            throw BizException.error("无可用车辆");
         }
         Long vehicleId = vehiclePoList.get(0).getId();
         po.setVehicleId(vehicleId);
@@ -139,7 +152,7 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
         // 分配司机
         List<UserPo> userPoList = userService.findByTypeAndStateAndDutyState(UserTypeEnum.DRIVER.getCode(), UserStateEnum.ENABLE.getCode(), DutyStateEnum.ON.getCode());
         if (CollectionUtils.isEmpty(userPoList)) {
-            throw BizException.error("审批失败，无可用司机");
+            throw BizException.error("无可用司机");
         }
         Long driverUserId = userPoList.get(0).getId();
         po.setDriverUserId(driverUserId);
@@ -150,7 +163,6 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
         // 给司机用户发送通知 todo
 
         po.setState(ApplyVehcileStateEnum.NO.getCode());
-        super.updateById(po);
     }
 
     public ApplyLogPo findByApproveId(Long approveId) {

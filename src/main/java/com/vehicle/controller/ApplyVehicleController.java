@@ -1,4 +1,4 @@
-package com.Apply.controller;
+package com.vehicle.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vehicle.base.web.Response;
