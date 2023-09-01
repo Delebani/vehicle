@@ -23,9 +23,13 @@ public class ApplyLogVo implements Serializable {
 
     private Long id;
 
+    private String applyNo;
+
     private Long applyUserId;
 
     private String applyUserName;
+
+    private String applyUserMobile;
 
     private Long vehicleTypeId;
 
@@ -59,13 +63,13 @@ public class ApplyLogVo implements Serializable {
 
     private LocalDateTime returnTime;
 
-    private BigDecimal mileage;
+//    private BigDecimal mileage;
 
     private Long approveId;
 
-    private Long approveUsreId;
+    private Long approveUserId;
 
-    private String approveUsreName;
+    private String approveUserName;
 
     private Integer approveState;
 

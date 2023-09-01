@@ -84,4 +84,10 @@ public class PagesController {
         return "/pages/applyvehicle";
     }
 
+    @GetMapping("/approve_apply_vehicle")
+    public String approveApplyVehicle() throws Exception {
+
+        return "/pages/approve_apply_vehicle";
+    }
+
 }

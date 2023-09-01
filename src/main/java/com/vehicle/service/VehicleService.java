@@ -126,4 +126,11 @@ public class VehicleService extends ServiceImpl<VehicleMapper, VehiclePo> {
         updateWrapper.eq(VehiclePo::getId, vehicleId);
         super.update(updateWrapper);
     }
+
+    public void updateStateById(Long vehicleId, Integer state) {
+        LambdaUpdateWrapper<VehiclePo> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(VehiclePo::getState, state);
+        updateWrapper.eq(VehiclePo::getId, vehicleId);
+        super.update(updateWrapper);
+    }
 }

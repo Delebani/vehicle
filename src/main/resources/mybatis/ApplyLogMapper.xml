@@ -4,8 +4,10 @@
 
     <select id="listByReq" resultType="com.vehicle.dto.vo.ApplyLogVo">
         select a.id,
+        a.apply_no,
         a.apply_user_id,
         au.name apply_user_name,
+        au.mobile apply_user_mobile,
         a.vehicle_type_id,
         vt.type_name vehicle_type_name,
         a.vehicle_id,
@@ -27,7 +29,7 @@
         apv.approve_notes approve_notes,
         aud.name driver_user_name,
         a.return_time,
-        a.mileage,
+--         a.mileage,
         a.state
         from
         apply_log a
@@ -38,6 +40,7 @@
         left join approve apv on a.approve_id = apv.id
         left join user aud on a.driver_user_id = aud.id
         <include refid="search_apply_log_where"/>
+        order by a.id desc
         limit #{startIndex},#{pageSize}
     </select>
     <select id="countByReq" resultType="java.lang.Integer">

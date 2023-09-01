@@ -22,6 +22,8 @@ public class ApplyLogPo implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    private String applyNo;
+
     private Integer applyType;
 
     private Long applyUserId;
@@ -50,7 +52,7 @@ public class ApplyLogPo implements Serializable {
 
     private LocalDateTime returnTime;
 
-    private BigDecimal mileage;
+//    private BigDecimal mileage;
 
     private Long approveId;
 

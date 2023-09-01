@@ -1,0 +1,4 @@
+.layui-form-label.required:before {   /* 这种写法也可以*/
+    content: '* ';
+    color: red;
+}

@@ -14,10 +14,11 @@ import lombok.Getter;
 @Getter
 public enum ApplyVehcileStateEnum {
 
-    N(0, ""),
+    APPLYING(0, "申请中"),
     NO(1, "未出车"),
     ING(2, "出车中"),
     COMPLETED(3, "已完成"),
+    CANCEL(4, "已取消"),
 
     ;
 
@@ -32,6 +33,6 @@ public enum ApplyVehcileStateEnum {
                 return value;
             }
         }
-        return N;
+        return APPLYING;
     }
 }

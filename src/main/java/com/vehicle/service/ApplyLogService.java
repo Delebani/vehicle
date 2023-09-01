@@ -20,11 +20,11 @@ import com.vehicle.po.ApprovePo;
 import com.vehicle.po.UserPo;
 import com.vehicle.po.VehiclePo;
 import com.vehicle.transform.ApplyLogTransform;
+import com.vehicle.utils.ApplyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +94,9 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
                 o.setApproveStateName(approveStateEnum.getDesc());
             }
             o.setStateName(ApplyVehcileStateEnum.getByCode(o.getState()).getDesc());
+            if (null == o.getApproveId()) {
+                o.setApproveStateName("无需审核");
+            }
         });
         voPage.setRecords(voList);
         Integer total = applyLogMapper.countByReq(req);
@@ -112,8 +115,10 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
         CurrentUser currentUser = UserHolder.get();
         ApplyLogPo po = ApplyLogTransform.INSTANCE.req2po(req);
 
+        po.setApplyNo(ApplyUtil.getNo(ApproveTypeEnum.VEHICLE));
         po.setApplyUserId(currentUser.getId());
         po.setApplyTime(LocalDateTime.now());
+        po.setState(ApplyVehcileStateEnum.APPLYING.getCode());
         if (ApplyVehcileTypeEnum.PRESSING.getCode() == req.getApplyType()) {
             // 紧急用车
             handle(po);
@@ -182,7 +187,7 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
     public void returnVehicle(Long id) {
         // 判断位置 TODO
         ApplyLogPo po = super.getById(id);
-        po.setMileage(new BigDecimal(0));// 行驶里程
+        //po.setMileage(new BigDecimal(0));// 行驶里程
         po.setReturnTime(LocalDateTime.now());
         po.setState(ApplyVehcileStateEnum.COMPLETED.getCode());
         super.updateById(po);
@@ -193,4 +198,27 @@ public class ApplyLogService extends ServiceImpl<ApplyLogMapper, ApplyLogPo> {
         userService.driverSort(po.getDriverUserId());
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void cancel(Long id) {
+        ApplyLogPo po = super.getById(id);
+        ApplyVehcileStateEnum stateEnum = ApplyVehcileStateEnum.getByCode(po.getState());
+        if (ApplyVehcileStateEnum.ING == stateEnum
+                || ApplyVehcileStateEnum.COMPLETED == stateEnum
+                || ApplyVehcileStateEnum.CANCEL == stateEnum) {
+            throw BizException.error("申请单【" + po.getApplyNo() + "】，状态为【" + stateEnum.getDesc() + "】，不可取消");
+        }
+        if(null != po.getVehicleId()){
+            vehicleService.updateStateById(po.getVehicleId(),VehicleStateEnum.NO.getCode());
+        }
+        if(null != po.getDriverUserId()){
+            userService.updateDutyStateById(po.getDriverUserId(),DutyStateEnum.ON.getCode());
+        }
+        po.setState(ApplyVehcileStateEnum.CANCEL.getCode());
+        super.updateById(po);
+        if (null != po.getApproveId()) {
+            ApprovePo approvePo = approveService.getById(po.getApproveId());
+            approvePo.setApproveState(ApproveStateEnum.STOP.getCode());
+            approveService.updateById(approvePo);
+        }
+    }
 }

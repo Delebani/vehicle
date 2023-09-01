@@ -5,7 +5,8 @@ $(function () {
             form = layui.form,
             table = layui.table,
             laydate = layui.laydate,
-            saveIndex = 0
+            approveIndex = 0,
+            checkedid_arr = []
         ;
         $.get('/vehicle_type/all', function (res) {
             if (0 == res.code) {
@@ -30,11 +31,11 @@ $(function () {
 
         laydate.render({
             elem: '#startTime'
-            ,type: 'datetime'
+            , type: 'datetime'
         });
         laydate.render({
             elem: '#endTime'
-            ,type: 'datetime'
+            , type: 'datetime'
         });
         //执行渲染
         table.render({
@@ -62,30 +63,32 @@ $(function () {
             },
             toolbar: '#toolbar',//表头模板id
             cols: [[
-                // {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left', align: 'center'}
-                 {field: 'applyNo', title: '申请编号', width: 160, align: 'center',fixed: 'left'}
-                , {field: 'applyUserName', title: '申请人', width: 80, align: 'center', hide: true}
+                // {field: 'approveId', title: '审核ID', width: 80, sort: true, fixed: 'left', align: 'center', type: 'checkbox'}
+                // ,{field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left', align: 'center'}
+                {field: 'applyNo', title: '申请编号', width: 160, align: 'center',fixed: 'left'}
+                , {field: 'applyUserName', title: '申请人', width: 80, align: 'center'}
+                , {field: 'applyUserMobile', title: '联系方式', width: 110, align: 'center'}
                 , {field: 'vehicleTypeName', title: '车辆类型', width: 110, align: 'center'}
-                , {field: 'peopleNum', title: '使用人数', width: 80, hide: true, align: 'center'}
+                , {field: 'peopleNum', title: '使用人数', width: 110, align: 'center'}
                 , {field: 'applyTime', title: '申请时间', width: 180, align: 'center', hide: true}
                 , {field: 'departure', title: '出发地', width: 100, align: 'center'}
                 , {field: 'dest', title: '目的地', width: 100, align: 'center'}
                 , {field: 'startTime', title: '开始时间', width: 180, align: 'center'}
                 , {field: 'endTime', title: '结束时间', width: 180, align: 'center'}
 
-                , {field: 'applyReason', title: '申请原因', width: 180,  align: 'center'}
-                , {field: 'remark', title: '备注', width: 80, align: 'center'}
-                , {field: 'stateName', title: '申请单状态', width: 120, align: 'center'}
+                , {field: 'applyReason', title: '申请原因', width: 180, align: 'center'}
+                , {field: 'remark', title: '备注', width: 80, align: 'center', hide: true}
+                // , {field: 'stateName', title: '申请单状态', width: 120, align: 'center'}
 
-                , {field: 'plateNo', title: '出车车辆', width: 130, align: 'center', hide: true}
-                , {field: 'driverUserName', title: '出车司机', width: 130, align: 'center', hide: true}
-                , {field: 'returnTime', title: '归还时间', width: 130, align: 'center', hide: true}
+                // , {field: 'plateNo', title: '出车车辆', width: 130, align: 'center'}
+                // , {field: 'driverUserName', title: '出车司机', width: 130, align: 'center'}
+                // , {field: 'returnTime', title: '归还时间', width: 130, align: 'center'}
                 // , {field: 'mileage', title: '行驶里程', width: 130, align: 'center'}
 
                 , {field: 'approveStateName', title: '审核状态', width: 130, align: 'center'}
-                , {field: 'approveUserName', title: '审核人', width: 130, align: 'center', hide: true}
-                , {field: 'approveNotes', title: '审核备注', width: 130, align: 'center', hide: true}
-                , {field: 'approveTime', title: '审核时间', width: 130, align: 'center', hide: true}
+                // , {field: 'approveUsreName', title: '审核人', width: 130, align: 'center'}
+                // , {field: 'approveNotes', title: '审核备注', width: 130, align: 'center'}
+                // , {field: 'approveTime', title: '审核时间', width: 130, align: 'center'}
 
                 // , {field: 'creator', title: '创建人', width: 110, hide: true, align: 'center'}
                 // , {field: 'createTime', title: '创建时间', width: 180, hide: true, align: 'center'}
@@ -158,7 +161,6 @@ $(function () {
                     , "stateName": data.stateName
 
 
-
                 });
                 layer.open({
                     type: 1,
@@ -171,59 +173,46 @@ $(function () {
                         $('#applyvehicleview')[0].reset();
                     },
                 });
-            }else if (layEvent === 'cancel') { //取消
-                layer.confirm('真的取消吗', function(index){
-                    // 向服务端发送删除指令
-                    $.get('/apply_vehicle/cancel?id='+data.id,function (res) {
-                        if(0 == res.code) {
-                            layer.msg('取消成功');
-                            // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-                            layer.close(index);
-                            //执行搜索重载
-                            table.reload('applyvehicle', {
-                                page: {
-                                    current: 1
-                                }
-                                , where: {}
-                            }, 'data');
-                        }
-                    })
+            } else if (layEvent === 'approve') {
+                checkedid_arr = []
+                checkedid_arr.push(data.approveId)
+                approveIndex = layer.open({
+                    type: 1,
+                    title: '审核',
+                    area: ['900px', '300px'],
+                    offset: '100px',
+                    content: $('#approve') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    , cancel: function (index, layero) {
+                        layer.close(index);
+                        $('#approve')[0].reset();
+                    },
                 });
             }
         });
 
         //头部工具栏事件
         table.on('toolbar(applyvehicle)', function (obj) {
+            checkedid_arr = []
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data //获取选中的数据
+            for (var i = 0; i < data.length; i++) {
+                checkedid_arr.push(data[i].approveId)
+            }
             switch (obj.event) {
-                case 'submit':
-                    form.val("applyvehiclefrom", {
-                        "applyType": 1
-                    });
-                    saveIndex = layer.open({
+                case 'approvebatch':
+                    if (checkedid_arr.length == 0) {
+                        layer.msg("请选择要审批的申请");
+                        return
+                    }
+                    approveIndex = layer.open({
                         type: 1,
-                        title: '用车申请',
-                        area: ['900px', '600px'],
+                        title: '审核',
+                        area: ['900px', '300px'],
                         offset: '100px',
-                        content: $('#applyvehiclefrom') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        content: $('#approve') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                         , cancel: function (index, layero) {
                             layer.close(index);
-                            $('#applyvehiclefrom')[0].reset();
-                        },
-                    });
-                    break;
-                case 'pressing':
-                    form.val("applyvehiclefrom", {
-                        "applyType": 2
-                    });
-                    saveIndex = layer.open({
-                        type: 1,
-                        title: '紧急用车申请',
-                        area: ['900px', '600px'],
-                        offset: '100px',
-                        content: $('#applyvehiclefrom') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                        , cancel: function (index, layero) {
-                            layer.close(index);
-                            $('#applyvehiclefrom')[0].reset();
+                            $('#approve')[0].reset();
                         },
                     });
                     break;
@@ -237,20 +226,24 @@ $(function () {
             ;
         });
 
-        // 新增
-        form.on('submit(savebtn)', function (data) {
+        // 审核
+        form.on('submit(approvebtn)', function (data) {
             var savedata = data.field;//将数据进行json话发送给后台
+            savedata.idList = checkedid_arr;
+            var submitdata = JSON.stringify(savedata);
+
+            console.log(submitdata);
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-                url: '/apply_vehicle/submit',
-                data: JSON.stringify(savedata),
+                url: '/approve/submit',
+                data: submitdata,
                 dataType: 'json',
                 success: function (res) {
                     console.log(res)
                     if (0 == res.code) {
-                        $('#applyvehiclefrom')[0].reset();
-                        layer.msg("提交成功");
+                        $('#approve')[0].reset();
+                        layer.msg("审核完成");
                         //执行搜索重载
                         table.reload('applyvehicle', {
                             page: {
@@ -258,14 +251,14 @@ $(function () {
                             }
                             , where: {}
                         }, 'data');
-                        layer.close(saveIndex);
+                        layer.close(approveIndex);
+                        checkedid_arr = [];
                     }
                 },
                 error: function (e) {
                     console.log(e);
                 }
             })
-
             return false;
         });
     })

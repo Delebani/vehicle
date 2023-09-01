@@ -33,6 +33,12 @@ public class ApplyVehicleController {
         return Response.success();
     }
 
+    @ApiOperation(value = "取消", notes = "取消")
+    @GetMapping(value = "/cancel")
+    public Response cancel(@RequestParam(name = "id") Long id) {
+        ApplyLogService.cancel(id);
+        return Response.success();
+    }
 
     @ApiOperation(value = "查看", notes = "查看")
     @GetMapping(value = "/view")

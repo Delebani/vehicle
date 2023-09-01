@@ -205,7 +205,7 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
         queryWrapper.last("limit 1");
         UserPo onDutyDriver = super.getOne(queryWrapper);
         Integer userSort = 0;
-        if(null != onDutyDriver){
+        if (null != onDutyDriver) {
             userSort = onDutyDriver.getUserSort() + 1;
         }
 
@@ -219,6 +219,13 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
     public void departure(Long id) {
         LambdaUpdateWrapper<UserPo> updateWrapper = Wrappers.lambdaUpdate();
         updateWrapper.set(UserPo::getDutyState, DutyStateEnum.OUT.getCode());
+        updateWrapper.eq(UserPo::getId, id);
+        super.update(updateWrapper);
+    }
+
+    public void updateDutyStateById(Long id, Integer dutyState) {
+        LambdaUpdateWrapper<UserPo> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(UserPo::getDutyState, dutyState);
         updateWrapper.eq(UserPo::getId, id);
         super.update(updateWrapper);
     }

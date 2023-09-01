@@ -27,4 +27,19 @@ public interface Constants {
      * 手机号验证码储存key
      */
     String MOBILE_CODE = "code_";
+
+    /**
+     * 车辆申请编号浅醉
+     */
+    String APPLY_VEHICLE_NO_PREFIX = "VE";
+
+    /**
+     * 车辆申请编号浅醉
+     */
+    String APPLY_EXPENSE_NO_PREFIX = "EX";
+
+    /**
+     * 车辆申请编号浅醉
+     */
+    String APPLY_PERSON_NO_PREFIX = "PE";
 }

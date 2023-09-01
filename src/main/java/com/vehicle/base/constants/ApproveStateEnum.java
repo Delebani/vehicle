@@ -17,6 +17,7 @@ public enum ApproveStateEnum {
     APPROVING(1, "审核中"),
     PASS(2, "已通过"),
     REFUSE(3, "被拒绝"),
+    STOP(4, "终止"),
 
     ;
 

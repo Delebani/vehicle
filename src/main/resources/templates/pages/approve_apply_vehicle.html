@@ -15,7 +15,7 @@
     <script type="text/javascript" src="/js/xcConfirm.js"></script>
     <script type="text/javascript" src="/layui/layui.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
-    <script type="text/javascript" src="/js/applyvehicle.js"></script>
+    <script type="text/javascript" src="/js/approve_apply_vehicle.js"></script>
 
 </head>
 <body>
@@ -28,12 +28,12 @@
                 <input type="text" name="applyUserName" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">车牌号</label>
-            <div class="layui-input-block">
-                <input type="text" name="plateNo" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-        </div>
+        <!--<div class="layui-inline">-->
+        <!--<label class="layui-form-label">车牌号</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<input type="text" name="plateNo" placeholder="请输入" autocomplete="off" class="layui-input">-->
+        <!--</div>-->
+        <!--</div>-->
         <div class="layui-inline">
             <label class="layui-form-label">车辆类型</label>
             <div class="layui-input-block">
@@ -61,97 +61,20 @@
 <!---表头操作--->
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="submit"> 用车申请 </button>
-        <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="pressing"> 紧急用车申请 </button>
+        <!--<button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="approvebatch"> 审批</button>-->
+        <!--<button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="submit"> 用车申请 </button>-->
+        <!--<button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="pressing"> 紧急用车申请 </button>-->
     </div>
 </script>
 
 <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 <script type="text/html" id="currentTableBar">
     <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
-    {{#  if(d.state == 0 || d.state == 1){ }}
-    <a class="layui-btn layui-btn-xs layui-btn layui-btn-danger" lay-event="cancel">取消</a>
+    {{#  if(d.approveState == 1){ }}
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="approve">审批</a>
     {{#  } }}
 </script>
 <table id="applyvehicle" lay-filter="applyvehicle"></table>
-
-<!--add-->
-<form class="layui-form" lay-filter="applyvehiclefrom" style="padding-top:20px" id="applyvehiclefrom" hidden="true">
-    <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
-    <input type="text" name="applyType" class="layui-hide">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label required">使用人数:</label>
-            <div class="layui-input-block">
-                <input type="number" name="peopleNum" required lay-verify="required" placeholder="" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <input type="text" name="vehicleTypeId" class="layui-hide">
-            <label class="layui-form-label required">车辆类型:</label>
-            <div class="layui-input-block">
-                <select id ="vehicleTypeId4addselect" name="vehicleTypeId" required lay-verify="required" lay-filter="vehicleTypeId4add">
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-
-        <div class="layui-inline">
-            <label class="layui-form-label required">出发地:</label>
-            <div class="layui-input-block">
-                <input type="text" name="departure" required lay-verify="required" placeholder="" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label required">目的地:</label>
-            <div class="layui-input-block">
-                <input type="text" name="dest" required lay-verify="required" placeholder="" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label required">开始时间:</label>
-            <div class="layui-input-block">
-                <input id="startTime" type="text" name="startTime" required lay-verify="required" placeholder="" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label required">结束时间:</label>
-            <div class="layui-input-block">
-                <input id="endTime" type="text" name="endTime" required lay-verify="required" placeholder="" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label required">申请原因:</label>
-            <div class="layui-input-block">
-                <select id ="applyReason4addselect" name="applyReasonId" required lay-verify="required" lay-filter="applyReasonId">
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-inline">
-        <label class="layui-form-label">备注:</label>
-        <div class="layui-input-block">
-            <textarea name="remark" placeholder="请输入" style="width: 460px" class="layui-textarea"></textarea>
-        </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button id="savebtn" class="layui-btn" lay-submit lay-filter="savebtn">提交</button>
-        </div>
-    </div>
-</form>
 
 <!--查看-->
 <form class="layui-form" lay-filter="applyvehicleview" style="padding-top:20px" id="applyvehicleview" hidden="true">
@@ -186,7 +109,8 @@
             <input type="text" name="vehicleTypeId" class="layui-hide">
             <label class="layui-form-label">车辆类型:</label>
             <div class="layui-input-block">
-                <input type="text" name="vehicleTypeName" required lay-verify="required" placeholder="" autocomplete="off"
+                <input type="text" name="vehicleTypeName" required lay-verify="required" placeholder=""
+                       autocomplete="off"
                        class="layui-input" disabled>
             </div>
         </div>
@@ -272,10 +196,10 @@
             </div>
         </div>
         <!--<div class="layui-inline">-->
-            <!--<label class="layui-form-label">行驶里程:</label>-->
-            <!--<div class="layui-input-block">-->
-                <!--<input type="text" name="mileage" placeholder="" autocomplete="off" class="layui-input" disabled>-->
-            <!--</div>-->
+        <!--<label class="layui-form-label">行驶里程:</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<input type="text" name="mileage" placeholder="" autocomplete="off" class="layui-input" disabled>-->
+        <!--</div>-->
         <!--</div>-->
     </div>
     <div class="layui-form-item">
@@ -283,7 +207,8 @@
             <input type="text" name="approveState" class="layui-hide">
             <label class="layui-form-label">审核状态:</label>
             <div class="layui-input-block">
-                <input type="text" name="approveStateName" placeholder="" autocomplete="off" class="layui-input" disabled>
+                <input type="text" name="approveStateName" placeholder="" autocomplete="off" class="layui-input"
+                       disabled>
             </div>
         </div>
         <div class="layui-inline">
@@ -291,7 +216,8 @@
             <input type="text" name="approveUserId" class="layui-hide">
             <label class="layui-form-label">审核人:</label>
             <div class="layui-input-block">
-                <input type="text" name="approveUserName" placeholder="" autocomplete="off" class="layui-input" disabled>
+                <input type="text" name="approveUserName" placeholder="" autocomplete="off" class="layui-input"
+                       disabled>
             </div>
         </div>
         <div class="layui-inline">
@@ -305,8 +231,37 @@
         <div class="layui-inline">
             <label class="layui-form-label">审核备注:</label>
             <div class="layui-input-block">
-                <textarea name="approveNotes" placeholder="" style="width: 460px" class="layui-textarea" disabled></textarea>
+                <textarea name="approveNotes" placeholder="" style="width: 460px" class="layui-textarea"
+                          disabled></textarea>
             </div>
+        </div>
+    </div>
+</form>
+<!--审核-->
+<form class="layui-form" lay-filter="approve" style="padding-top:20px" id="approve" hidden="true">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="text" name="approveState" class="layui-hide">
+            <label class="layui-form-label required">审核意见:</label>
+            <div class="layui-input-block">
+                <select name="approveState" lay-filter="userType" required>
+                    <option value="2">通过</option>
+                    <option value="3">拒绝</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">审核备注:</label>
+            <div class="layui-input-block">
+                <textarea name="approveNotes" placeholder="" style="width: 460px" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="savebtn" class="layui-btn" lay-submit lay-filter="approvebtn">审核</button>
         </div>
     </div>
 </form>

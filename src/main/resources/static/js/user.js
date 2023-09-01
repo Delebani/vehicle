@@ -239,6 +239,10 @@ $(function () {
                     layer.msg('编辑');
                     break;
                 case 'enable':
+                    if (checkedid_arr.length == 0) {
+                        layer.msg("请选择账户");
+                        return
+                    }
                     var req = {userIdList:checkedid_arr,state:1}
                     $.ajax({
                         type: "POST",
@@ -266,6 +270,10 @@ $(function () {
                     });
                     break;
                 case 'freeze':
+                    if (checkedid_arr.length == 0) {
+                        layer.msg("请选择账户");
+                        return
+                    }
                     var req = {userIdList:checkedid_arr,state:0}
                     $.ajax({
                         type: "POST",

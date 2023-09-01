@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <!--<link href="/css/bootstrap.min.css" rel="stylesheet">-->
     <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/common.css">
 
     <script type="text/javascript" src="/js/jquery-3.7.0.min.js"></script>
     <script type="text/javascript" src="/js/jquery-1.9.1.js"></script>
@@ -81,7 +82,7 @@
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">用户类型:</label>
+            <label class="layui-form-label required">用户类型:</label>
             <div class="layui-input-block">
                 <select name="type" required lay-verify="required" lay-filter="userType">
                     <option value="1">管理员</option>
@@ -112,13 +113,13 @@
     <div class="layui-form-item">
 
         <div class="layui-inline">
-            <label class="layui-form-label">手机号码:</label>
+            <label class="layui-form-label required">手机号码:</label>
             <div class="layui-input-block">
                 <input type="text" name="mobile" required lay-verify="required|phone" placeholder="请输入" autocomplete="off" class="layui-input" oninput="if(value.length>5)value=value.slice(0,11)" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="11">
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">身份证号码:</label>
+            <label class="layui-form-label required">身份证:</label>
             <div class="layui-input-block">
                 <input type="text" name="idNo" required lay-verify="required|identity" placeholder="请输入" autocomplete="off" class="layui-input" maxlength="18">
             </div>
@@ -126,19 +127,19 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">部门:</label>
+            <label class="layui-form-label required">部门:</label>
             <div class="layui-input-block">
                 <input type="text" name="department" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">职务:</label>
+            <label class="layui-form-label required">职务:</label>
             <div class="layui-input-block">
                 <input type="text" name="duty" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">岗位:</label>
+            <label class="layui-form-label required">岗位:</label>
             <div class="layui-input-block">
                 <input type="text" name="post" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
@@ -169,7 +170,7 @@
     <input type="text" name="id" class="layui-hide">
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label required">姓名:</label>
+            <label class="layui-form-label">姓名:</label>
             <div class="layui-input-block">
                 <input type="text" name="name" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" disabled>
             </div>
@@ -212,7 +213,7 @@
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">身份证号码:</label>
+            <label class="layui-form-label">身份证:</label>
             <div class="layui-input-block">
                 <input type="text" name="idNo" required lay-verify="required|identity" placeholder="" autocomplete="off" class="layui-input" maxlength="18" disabled>
             </div>

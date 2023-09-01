@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="/img/icon.png">
@@ -15,7 +15,7 @@
     <script type="text/javascript" src="/js/xcConfirm.js"></script>
     <script type="text/javascript" src="/layui/layui.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
-    <script type="text/javascript" src="/js/vehicletype.js"></script>
+    <script type="text/javascript" src="/js/applyreason.js"></script>
 
 </head>
 <body>
@@ -23,9 +23,9 @@
 <form class="layui-form">
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">类型名称</label>
+            <label class="layui-form-label">地址</label>
             <div class="layui-input-block">
-                <input type="text" name="typeName" placeholder="请输入" autocomplete="off" class="layui-input">
+                <input type="text" name="address" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
@@ -37,7 +37,7 @@
 <!---表头操作--->
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加</button>
     </div>
 </script>
 
@@ -47,16 +47,18 @@
     <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="del">删除</a>
 </script>
-<table id="type" lay-filter="type" ></table>
+<table id="reason" lay-filter="reason"></table>
 
 <!--添加菜单-->
-<form class="layui-form" lay-filter="typefrom" style="padding-top:20px" id ="typefrom" hidden="true"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+<form class="layui-form" lay-filter="addressfrom" style="padding-top:20px" id="addressfrom" hidden="true">
+    <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
     <input type="text" name="id" class="layui-hide">
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label required">类型名称:</label>
+            <label class="layui-form-label required">地址:</label>
             <div class="layui-input-block">
-                <input type="text" name="typeName" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                <input type="text" name="address" required lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
             </div>
         </div>
     </div>
@@ -68,13 +70,15 @@
 </form>
 
 <!--查看菜单-->
-<form class="layui-form" lay-filter="typeview" style="padding-top:20px" id ="typeview" hidden="true"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+<form class="layui-form" lay-filter="addressview" style="padding-top:20px" id="addressview" hidden="true">
+    <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
     <input type="text" name="id" class="layui-hide">
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label required">类型名称:</label>
+            <label class="layui-form-label required">地址:</label>
             <div class="layui-input-block">
-                <input type="text" name="typeName" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" disabled>
+                <input type="text" name="address" required lay-verify="required" placeholder="" autocomplete="off"
+                       class="layui-input" disabled>
             </div>
         </div>
 
