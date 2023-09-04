@@ -28,13 +28,24 @@ $(function () {
             }
         });
 
+        $.get('/user_address/all', function (res) {
+            if (0 == res.code) {
+                var addressList = res.data;
+                for (var i = 0; i < addressList.length; i++) {
+                    $('#address_select').append('<option value="' + addressList[i].address + '">' + addressList[i].address + '</option>');
+                    $('#dest_select').append('<option value="' + addressList[i].address + '">' + addressList[i].address + '</option>');
+                }
+                form.render('select', 'address_select');
+            }
+        })
+
         laydate.render({
             elem: '#startTime'
-            ,type: 'datetime'
+            , type: 'datetime'
         });
         laydate.render({
             elem: '#endTime'
-            ,type: 'datetime'
+            , type: 'datetime'
         });
         //执行渲染
         table.render({
@@ -63,7 +74,7 @@ $(function () {
             toolbar: '#toolbar',//表头模板id
             cols: [[
                 // {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left', align: 'center'}
-                 {field: 'applyNo', title: '申请编号', width: 160, align: 'center',fixed: 'left'}
+                {field: 'applyNo', title: '申请编号', width: 160, align: 'center', fixed: 'left'}
                 , {field: 'applyUserName', title: '申请人', width: 80, align: 'center', hide: true}
                 , {field: 'vehicleTypeName', title: '车辆类型', width: 110, align: 'center'}
                 , {field: 'peopleNum', title: '使用人数', width: 80, hide: true, align: 'center'}
@@ -73,7 +84,7 @@ $(function () {
                 , {field: 'startTime', title: '开始时间', width: 180, align: 'center'}
                 , {field: 'endTime', title: '结束时间', width: 180, align: 'center'}
 
-                , {field: 'applyReason', title: '申请原因', width: 180,  align: 'center'}
+                , {field: 'applyReason', title: '申请原因', width: 180, align: 'center'}
                 , {field: 'remark', title: '备注', width: 80, align: 'center'}
                 , {field: 'stateName', title: '申请单状态', width: 120, align: 'center'}
 
@@ -158,7 +169,6 @@ $(function () {
                     , "stateName": data.stateName
 
 
-
                 });
                 layer.open({
                     type: 1,
@@ -171,11 +181,11 @@ $(function () {
                         $('#applyvehicleview')[0].reset();
                     },
                 });
-            }else if (layEvent === 'cancel') { //取消
-                layer.confirm('真的取消吗', function(index){
+            } else if (layEvent === 'cancel') { //取消
+                layer.confirm('真的取消吗', function (index) {
                     // 向服务端发送删除指令
-                    $.get('/apply_vehicle/cancel?id='+data.id,function (res) {
-                        if(0 == res.code) {
+                    $.get('/apply_vehicle/cancel?id=' + data.id, function (res) {
+                        if (0 == res.code) {
                             layer.msg('取消成功');
                             // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                             layer.close(index);
@@ -268,5 +278,63 @@ $(function () {
 
             return false;
         });
+
+        // 设置select 与 input 输入框联动
+        form.on('select(address_select)', function (data) {
+            $("#departure").val(data.value);
+
+            $("#address_select").next().find("dl").css({display: "none"});
+            form.render();
+        });
+
+        window.search = function () {
+            var value = $("#departure").val();
+            value = value.replace(/^\s*/,"");//利用正则去除左侧空格
+            // console.log(value)
+            $("#address_select").val(value);
+            form.render();
+            $("#address_select").next().find(".layui-select-title input").click();
+            var dl = $("#address_select").next().find("dl").children();
+            var j = -1;
+
+            for (var i =0;i<dl.length;i++){
+                if (dl[i].innerHTML.indexOf(value)<=-1){
+                    dl[i].style.display="none";
+                    j++
+                }
+                if (j ==dl.length-1){
+                    $("#address_select").next().find("dl").css({"display":"none"});
+                }
+            }
+        }
+
+        // 设置select 与 input 输入框联动
+        form.on('select(dest_select)', function (data) {
+            $("#dest").val(data.value);
+
+            $("#dest_select").next().find("dl").css({display: "none"});
+            form.render();
+        });
+
+        window.searchdest = function () {
+            var value = $("#dest").val();
+            value = value.replace(/^\s*/,"");//利用正则去除左侧空格
+            // console.log(value)
+            $("#dest_select").val(value);
+            form.render();
+            $("#dest_select").next().find(".layui-select-title input").click();
+            var dl = $("#dest_select").next().find("dl").children();
+            var j = -1;
+
+            for (var i =0;i<dl.length;i++){
+                if (dl[i].innerHTML.indexOf(value)<=-1){
+                    dl[i].style.display="none";
+                    j++
+                }
+                if (j ==dl.length-1){
+                    $("#dest_select").next().find("dl").css({"display":"none"});
+                }
+            }
+        }
     })
 })

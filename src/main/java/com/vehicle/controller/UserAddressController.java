@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author lijianbing
  * @date 2023/9/2 2:08
@@ -50,5 +52,11 @@ public class UserAddressController {
     @PostMapping(value = "/page")
     public Response<Page<UserAddressVo>> page(@RequestBody UserAddressPageReq req) {
         return Response.success(addressService.pages(req));
+    }
+
+    @ApiOperation(value = "所有", notes = "所有")
+    @GetMapping(value = "/all")
+    public Response<List<UserAddressVo>> all() {
+        return Response.success(addressService.all());
     }
 }

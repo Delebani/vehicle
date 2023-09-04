@@ -75,7 +75,7 @@ public class ApplyUtil {
                 if (x == 0) {
                     x = 1;
                 }
-                pk.append(random32.substring(x - 1, x));
+                pk.append(random32.substring(x - 1, x).toUpperCase());
             }
             return pk.toString();
         } catch (Exception e) {

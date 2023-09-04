@@ -23,7 +23,6 @@ public class UserAddressReq implements Serializable {
     private static final long serialVersionUID = -6161438701393991031L;
     private Long id;
 
-    @NotNull(message = "用户id不可为空")
     private Long userId;
 
     @NotBlank(message = "请填写地址")

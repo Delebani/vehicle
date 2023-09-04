@@ -15,6 +15,8 @@ import com.vehicle.transform.UserAddressTransform;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author lijianbing
  * @date 2023/9/2 2:07
@@ -43,5 +45,9 @@ public class UserAddressService extends ServiceImpl<UserAddressMapper, UserAddre
         queryWrapper.like(StringUtils.isNotBlank(req.getAddress()), UserAddressPo::getAddress, req.getAddress());
         Page<UserAddressPo> poPage = super.page(new Page<>(req.getCurrent(), req.getPageSize()), queryWrapper);
         return UserAddressTransform.INSTANCE.poPage2VoPage(poPage);
+    }
+
+    public List<UserAddressVo> all() {
+        return UserAddressTransform.INSTANCE.poList2VoList(super.list());
     }
 }

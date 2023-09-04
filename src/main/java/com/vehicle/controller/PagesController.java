@@ -90,4 +90,15 @@ public class PagesController {
         return "/pages/approve_apply_vehicle";
     }
 
+    @GetMapping("/useraddress")
+    public String userAddress() throws Exception {
+
+        return "/pages/useraddress";
+    }
+
+    @GetMapping("/driversort")
+    public String driver() throws Exception {
+
+        return "/pages/driversort";
+    }
 }

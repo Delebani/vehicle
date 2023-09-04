@@ -34,11 +34,11 @@ $(function () {
             toolbar: '#toolbar',//表头模板id
             cols: [[
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', align: 'center'}
-                ,{field: 'address', title: '地址', width:130, align: 'center'}
-                ,{field: 'creator', title: '创建人', width: 110,hide:true, align: 'center'}
-                ,{field: 'createTime', title: '创建时间', width: 180, hide:true, align: 'center'}
-                ,{field: 'updater', title: '更新人', width: 80, hide:true, align: 'center'}
-                ,{field: 'updateTime', title: '更新时间', width: 180, hide:true, align: 'center'}
+                ,{field: 'address', title: '地址', width:600, align: 'center'}
+                // ,{field: 'creator', title: '创建人', width: 110,hide:true, align: 'center'}
+                // ,{field: 'createTime', title: '创建时间', width: 180, hide:true, align: 'center'}
+                // ,{field: 'updater', title: '更新人', width: 80, hide:true, align: 'center'}
+                // ,{field: 'updateTime', title: '更新时间', width: 180, hide:true, align: 'center'}
                 ,{ title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center" }//toolbar使用了一个模板
             ]],
             limits: [10, 15, 20, 25, 50, 100],//分页
@@ -90,7 +90,7 @@ $(function () {
             } else if(layEvent === 'del'){ //删除
                 layer.confirm('真的删除吗', function(index){
                     // 向服务端发送删除指令
-                    $.get('/apply_address/del?id='+data.id,function (res) {
+                    $.get('/user_address/del?id='+data.id,function (res) {
                         if(0 == res.code) {
                             layer.msg('删除成功');
                             obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
