@@ -22,13 +22,15 @@ public class ExpensePo implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    private String expenseNo;
+
     private Long vehicleId;
 
-    private Long applyUserId;
+    private Long expenseUserId;
 
     private LocalDateTime expenseTime;
 
-    private String expenseTypeId;
+    private Long expenseTypeId;
 
     private String invoiceUrl;
 
@@ -37,10 +39,6 @@ public class ExpensePo implements Serializable {
     private String remark;
 
     private Long approveId;
-
-    private Integer approveState;
-
-    private LocalDateTime approveTime;
 
     @TableField(fill = FieldFill.INSERT)
     private String creator;

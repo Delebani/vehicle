@@ -69,6 +69,12 @@
             <if test="approveState != null">
                 AND apv.approve_state = #{approveState}
             </if>
+            <if test="start != null">
+                AND a.apply_time &gt;= #{start}
+            </if>
+            <if test="end != null">
+                AND a.apply_time &lt;= #{end}
+            </if>
         </where>
     </sql>
 </mapper>

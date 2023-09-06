@@ -15,19 +15,19 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "ApplyLogPageReq 对象", description = "ApplyLogPageReq 请求对象")
-public class ApplyLogPageReq extends AbstractPaging {
+@ApiModel(value = "ExpenseTypePageReq 对象", description = "ExpenseTypePageReq 请求对象")
+public class ExpensePageReq extends AbstractPaging {
 
-    private static final long serialVersionUID = -5760621996269112292L;
+    private static final long serialVersionUID = -2345871816825012782L;
 
-    @ApiModelProperty("申请人")
-    private String applyUserName;
+    @ApiModelProperty("报销人")
+    private String expenseUserName;
 
     @ApiModelProperty("车牌号")
     private String plateNo;
 
-    @ApiModelProperty("车辆类型")
-    private Long vehicleTypeId;
+    @ApiModelProperty("费用类型")
+    private Long expenseTypeId;
 
     @ApiModelProperty("审核状态")
     private Integer approveState;
@@ -37,4 +37,5 @@ public class ApplyLogPageReq extends AbstractPaging {
 
     @ApiModelProperty("结束")
     private LocalDateTime end;
+
 }

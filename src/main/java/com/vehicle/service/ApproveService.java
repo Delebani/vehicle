@@ -31,6 +31,10 @@ public class ApproveService extends ServiceImpl<ApproveMapper, ApprovePo> {
     @Lazy
     private ApplyLogService applyLogService;
 
+    @Autowired
+    @Lazy
+    private ExpenseService expenseService;
+
     @Transactional(rollbackFor = Exception.class)
     public void approve(ApproveReq req) {
         if (CollectionUtils.isEmpty(req.getIdList()) || ObjectUtils.isNull(req.getApproveState())) {
@@ -66,12 +70,16 @@ public class ApproveService extends ServiceImpl<ApproveMapper, ApprovePo> {
                     applyLogService.approvePass(id);
                     break;
                 case EXPENSE:
+                    // 发送通知 TODO
                     break;
                 case PERSON:
                     break;
                 default:
                     throw BizException.error("审批类型不存在");
             }
+        } else if (ApproveStateEnum.REFUSE.getCode() == approveSate) {
+            // 发送通知 TODO
+            po.getApplyUserId();
         }
     }
 }

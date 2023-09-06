@@ -133,4 +133,9 @@ public class VehicleService extends ServiceImpl<VehicleMapper, VehiclePo> {
         updateWrapper.eq(VehiclePo::getId, vehicleId);
         super.update(updateWrapper);
     }
+
+    public List<VehicleVo> all() {
+        List<VehiclePo> poList = super.list();
+        return VehicleTransform.INSTANCE.poList2VoList(poList);
+    }
 }

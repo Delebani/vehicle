@@ -47,6 +47,14 @@ $(function () {
             elem: '#endTime'
             , type: 'datetime'
         });
+        laydate.render({
+            elem: '#start'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#end'
+            , type: 'datetime'
+        });
         //执行渲染
         table.render({
             elem: '#applyvehicle',
@@ -56,7 +64,7 @@ $(function () {
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             },
             method: 'post',
-            where: {'applyUserName': '', 'plateNo': '', 'vehicleTypeId': '', 'approveState': ''},
+            where: {'applyUserName': '', 'plateNo': '', 'vehicleTypeId': '', 'approveState': '', 'start': '', 'end': ''},
             contentType: 'application/json',
             done: function (res) {
                 handleRes(res);
@@ -123,7 +131,9 @@ $(function () {
                     'applyUserName': searchdata.applyUserName,
                     'plateNo': searchdata.plateNo,
                     'vehicleTypeId': searchdata.vehicleTypeId,
-                    'approveState': searchdata.approveState
+                    'approveState': searchdata.approveState,
+                    'start': searchdata.start,
+                    'end': searchdata.end
                 },
             }, 'data');
 

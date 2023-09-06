@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.mapper.ExpenseMapper">
+
+    <select id="listByReq" resultType="com.vehicle.dto.vo.ExpenseVo">
+        select e.id,
+        e.expense_no,
+        e.expense_user_id,
+        au.name expense_user_name,
+        au.mobile expense_user_mobile,
+        e.expense_type_id,
+        et.type_name expense_type_name,
+        e.vehicle_id,
+        v.plate_no plate_no,
+        e.expense_time,
+        e.amount,
+        e.invoice_url,
+        e.remark,
+        e.approve_id,
+        apv.approve_user_id approve_user_id,
+        apv.approve_user_name approve_user_name,
+        apv.approve_state approve_state,
+        apv.approve_time approve_time,
+        apv.approve_notes approve_notes
+        from
+        expense e
+        left join user au on e.expense_user_id = au.id
+        left join expense_type et on e.expense_type_id = et.id
+        left join vehicle v on e.vehicle_id = v.id
+        left join approve apv on e.approve_id = apv.id
+        <include refid="search_where"/>
+        order by e.id desc
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="countByReq" resultType="java.lang.Long">
+        select count(1)
+        from
+        expense e
+        left join user au on e.expense_user_id = au.id
+        left join expense_type et on e.expense_type_id = et.id
+        left join vehicle v on e.vehicle_id = v.id
+        left join approve apv on e.approve_id = apv.id
+        <include refid="search_where"/>
+    </select>
+    <sql id="search_where">
+        <where>
+            <if test="expenseUserName != null and expenseUserName != ''">
+                AND au.name LIKE CONCAT('%', #{expenseUserName}, '%')
+            </if>
+            <if test="plateNo != null and plateNo != ''">
+                AND v.plate_no LIKE CONCAT('%', #{plateNo}, '%')
+            </if>
+            <if test="expenseTypeId != null">
+                AND e.expense_type_id = #{expenseTypeId}
+            </if>
+            <if test="approveState != null">
+                AND apv.approve_state = #{approveState}
+            </if>
+            <if test="start != null">
+                AND e.expense_time &gt;= #{start}
+            </if>
+            <if test="end != null">
+                AND e.expense_time &lt;= #{end}
+            </if>
+        </where>
+    </sql>
+</mapper>

@@ -37,6 +37,14 @@ $(function () {
             elem: '#endTime'
             , type: 'datetime'
         });
+        laydate.render({
+            elem: '#start'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#end'
+            , type: 'datetime'
+        });
         //执行渲染
         table.render({
             elem: '#applyvehicle',
@@ -46,7 +54,7 @@ $(function () {
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             },
             method: 'post',
-            where: {'applyUserName': '', 'plateNo': '', 'vehicleTypeId': '', 'approveState': ''},
+            where: {'applyUserName': '', 'plateNo': '', 'vehicleTypeId': '', 'approveState': '', 'start': '', 'end': ''},
             contentType: 'application/json',
             done: function (res) {
                 handleRes(res);
@@ -67,14 +75,14 @@ $(function () {
                 // ,{field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left', align: 'center'}
                 {field: 'applyNo', title: '申请编号', width: 160, align: 'center',fixed: 'left'}
                 , {field: 'applyUserName', title: '申请人', width: 80, align: 'center'}
-                , {field: 'applyUserMobile', title: '联系方式', width: 110, align: 'center'}
+                , {field: 'applyUserMobile', title: '联系方式', width: 130, align: 'center'}
                 , {field: 'vehicleTypeName', title: '车辆类型', width: 110, align: 'center'}
                 , {field: 'peopleNum', title: '使用人数', width: 110, align: 'center'}
                 , {field: 'applyTime', title: '申请时间', width: 180, align: 'center', hide: true}
                 , {field: 'departure', title: '出发地', width: 100, align: 'center'}
                 , {field: 'dest', title: '目的地', width: 100, align: 'center'}
-                , {field: 'startTime', title: '开始时间', width: 180, align: 'center'}
-                , {field: 'endTime', title: '结束时间', width: 180, align: 'center'}
+                , {field: 'startTime', title: '开始时间', width: 180, align: 'center', hide: true}
+                , {field: 'endTime', title: '结束时间', width: 180, align: 'center', hide: true}
 
                 , {field: 'applyReason', title: '申请原因', width: 180, align: 'center'}
                 , {field: 'remark', title: '备注', width: 80, align: 'center', hide: true}
@@ -115,7 +123,9 @@ $(function () {
                     'applyUserName': searchdata.applyUserName,
                     'plateNo': searchdata.plateNo,
                     'vehicleTypeId': searchdata.vehicleTypeId,
-                    'approveState': searchdata.approveState
+                    'approveState': searchdata.approveState,
+                    'start': searchdata.start,
+                    'end': searchdata.end
                 },
             }, 'data');
 

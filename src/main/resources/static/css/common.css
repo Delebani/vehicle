@@ -2,3 +2,6 @@
     content: '* ';
     color: red;
 }
+.layui-form-select dl {
+    max-height: 200px;  /* 这里根据实际情况设置相应的下拉弹出选项框的最大高度 */
+}

@@ -6,9 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author lijianbing
  * @date 2023/7/31 15:14
@@ -42,11 +39,13 @@ public class PagesController {
 
         return "/pages/user";
     }
+
     @GetMapping("/role")
     public String role() throws Exception {
 
         return "/pages/role";
     }
+
     @GetMapping("/menu")
     public String menu() throws Exception {
 
@@ -100,5 +99,23 @@ public class PagesController {
     public String driver() throws Exception {
 
         return "/pages/driversort";
+    }
+
+    @GetMapping("/expense")
+    public String expense() throws Exception {
+
+        return "/pages/expense";
+    }
+
+    @GetMapping("/expensetype")
+    public String expensetype() throws Exception {
+
+        return "/pages/expensetype";
+    }
+
+    @GetMapping("/approveexpense")
+    public String approveexpense() throws Exception {
+
+        return "/pages/approveexpense";
     }
 }

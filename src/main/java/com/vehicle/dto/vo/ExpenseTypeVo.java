@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "VehicleTypeVo 对象", description = "VehicleTypeVo 响应对象")
-public class VehicleTypeVo implements Serializable {
+public class ExpenseTypeVo implements Serializable {
 
     private static final long serialVersionUID = 849377807431498746L;
-    
+
     private Long id;
 
     private String typeName;

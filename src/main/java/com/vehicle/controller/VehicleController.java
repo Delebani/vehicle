@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author lijianbing
  * @date 2023/7/31 15:14
@@ -50,5 +52,11 @@ public class VehicleController {
     @PostMapping(value = "/page")
     public Response<Page<VehicleVo>> page(@RequestBody VehiclePageReq req) {
         return Response.success(vehicleService.page(req));
+    }
+
+    @ApiOperation(value = "所有", notes = "所有")
+    @GetMapping(value = "/all")
+    public Response<List<VehicleVo>> all() {
+        return Response.success(vehicleService.all());
     }
 }
