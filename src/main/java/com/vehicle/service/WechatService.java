@@ -28,10 +28,12 @@ import java.util.Base64;
 /**
  * 微信服务
  * https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/
+ * @author lijianbing
+ * @date 2023/9/7 22:45
  */
 @Service
 @Slf4j
-public class WeixinService {
+public class WechatService {
 
     @Value("${weixin.url}")
     private String url;
