@@ -5,15 +5,26 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.vehicle.base.cache.CacheManager;
 import com.vehicle.base.constants.Constants;
+import com.vehicle.base.constants.UserStateEnum;
 import com.vehicle.base.exception.BizException;
 import com.vehicle.dto.res.weixin.AccessTokenResDto;
 import com.vehicle.dto.res.weixin.Code2SessionResDto;
 import com.vehicle.dto.res.weixin.SubscribeMessageSendReqDto;
 import com.vehicle.dto.res.weixin.WxBaseResDto;
+import com.vehicle.dto.vo.UserVo;
+import com.vehicle.po.UserPo;
 import com.vehicle.po.WxSessionPo;
+import com.vehicle.transform.UserTransform;
 import com.vehicle.utils.HttpClientUtil;
+import com.vehicle.utils.InputStreamToBase64;
+import com.vehicle.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.InputStream;
 import java.security.AlgorithmParameters;
 import java.security.Key;
 import java.util.Base64;
@@ -28,6 +40,7 @@ import java.util.Base64;
 /**
  * 微信服务
  * https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/
+ *
  * @author lijianbing
  * @date 2023/9/7 22:45
  */
@@ -46,6 +59,9 @@ public class WechatService {
 
     @Autowired
     private WxSessionService wxSessionService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取微信openid
@@ -91,6 +107,40 @@ public class WechatService {
             return result.getAccessToken();
         } else {
             return JSON.parseObject(cacheResult, AccessTokenResDto.class).getAccessToken();
+        }
+    }
+
+    public String getQrcode(String scene) throws Exception {
+        //获取小程序码
+        String httpUrl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=ACCESS_TOKEN"
+                .replace("ACCESS_TOKEN", getAccessToken());
+        JSONObject reqJson = new JSONObject();
+        reqJson.put("scene", scene);
+        reqJson.put("page", "pages/index/index");
+        reqJson.put("check_path", true);
+
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse response = null;
+        try {
+
+
+            HttpPost httpPost = new HttpPost(httpUrl);
+            StringEntity stringEntity = new StringEntity(reqJson.toString(), "UTF-8");
+            stringEntity.setContentType("application/x-www-form-urlencoded");
+            httpPost.setEntity(stringEntity);
+            httpClient = HttpClientUtil.getHttpClient();
+            response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            InputStream content = entity.getContent();
+//        String res = HttpClientUtil.sendHttpPost(httpUrl, reqJson.toJSONString());
+            return "data:image/jpeg;base64," + InputStreamToBase64.convertInputStreamToBase64(content);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BizException.error("获取二维码失败");
+        } finally {
+            if (null != response) {
+                response.close();
+            }
         }
     }
 
@@ -195,5 +245,18 @@ public class WechatService {
                 "t23UTeuBeCz/Wtr1jUeGUg==",
                 "wx48b176a5957a50e6");
         System.out.println(data);
+    }
+
+    public UserVo minLogin(String mobile, String password) {
+        UserPo userPo = userService.getByMobileAndPassword(mobile, password);
+        if (null == userPo) {
+            throw BizException.error("用户不存在");
+        }
+        if(UserStateEnum.FREEZE.getCode() == userPo.getState()){
+            throw BizException.error("账号被冻结，请联系管理员");
+        }
+        TokenUtil.setToken(userPo);
+        userService.updateToken(userPo);
+        return UserTransform.INSTANCE.po2Vo(userPo);
     }
 }

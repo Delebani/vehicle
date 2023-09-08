@@ -56,7 +56,7 @@ public class UserVo implements Serializable {
     private String password;
 
     @ApiModelProperty("微信id")
-    private String wechatId;
+    private String openId;
 
     private String token;
 

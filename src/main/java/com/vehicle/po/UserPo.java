@@ -40,7 +40,7 @@ public class UserPo implements Serializable {
 
     private String password;
 
-    private String wechatId;
+    private String openId;
 
     private String token;
 

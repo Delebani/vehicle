@@ -9,10 +9,12 @@
     <link href="/css/style.min.css" rel="stylesheet">
     <link href="/css/login.css" rel="stylesheet">
     <link href="/css/xcConfirm.css" rel="stylesheet">
-    <script type="text/javascript" src="/js/login.js"></script>
+
     <script type="text/javascript" src="/js/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="/js/jquery.serializejson.min.js"></script>
     <script type="text/javascript" src="/js/xcConfirm.js"></script>
+    <script type="text/javascript" src="/js/login.js"></script>
 
 </head>
 <body>
@@ -25,8 +27,14 @@
                 <span id="pswd_msg" style="display:none;color:#ff0000;">请输入正确的密码</span>
                 <input class="btn btn-success btn-block loginbtn" type="button" value="登录" onclick="login()">
             </form>
+            <input class="btn btn-success btn-block scanbtn" type="button" value="扫码登录" onclick="scanlogin()">
             <input class="btn btn-success btn-block register" type="button" value="注册" onclick="register()">
             <input class="btn btn-success btn-block forget" type="button" value="忘记密码" onclick="forget()">
         </div>
+<div id = "qrcodecontainer" class="qrcodecontainer" hidden>
+    <img class="qrcodeimg" id = "qrcode" src="">
+    <span class="close-btn">x</span>
+</div>
+</div>
 </body>
 </html>

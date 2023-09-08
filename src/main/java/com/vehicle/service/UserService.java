@@ -229,4 +229,15 @@ public class UserService extends ServiceImpl<UserMapper, UserPo> {
         updateWrapper.eq(UserPo::getId, id);
         super.update(updateWrapper);
     }
+
+    public UserVo getByOpenId(String openId) {
+        LambdaQueryWrapper<UserPo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(UserPo::getOpenId, openId);
+        queryWrapper.last("limit 1");
+        UserPo po = super.getOne(queryWrapper);
+        if(null == po){
+            throw BizException.error("用户不存在");
+        }
+        return UserTransform.INSTANCE.po2Vo(po);
+    }
 }
